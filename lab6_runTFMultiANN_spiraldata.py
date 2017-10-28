@@ -72,7 +72,7 @@ plt.legend()
 # configure training parameters =====================================
 total_steps = 2000
 learning_rate = 0.005
-training_epochs = 120
+training_epochs = 200
 batch_size = 50
 display_step = 1
 
