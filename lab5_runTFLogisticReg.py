@@ -41,9 +41,9 @@ validation_size = total_size - training_size
 xsize  = 2
 ysize  = 2
 ''' (X,Y) data generation '''
-
+# data generation config
 mu_class0 = [ 0.,0. ]
-mu_class1 = [ 3.,3. ]
+mu_class1 = [ 5.,5. ]
 
 sigma_x1_class0 = 1.
 sigma_x2_class0 = 1.
@@ -51,7 +51,9 @@ sigma_x2_class0 = 1.
 sigma_x1_class1 = 2.
 sigma_x2_class1 = 2.
 
-corr_coeff = -0.7
+corr_coeff = -0.5
+#---------------------
+
 cov_class0 = [ [pow(sigma_x1_class0,2),corr_coeff*sigma_x2_class0*sigma_x2_class0],\
                [corr_coeff*sigma_x2_class0*sigma_x1_class0,pow(sigma_x2_class0,2)] ]
 
