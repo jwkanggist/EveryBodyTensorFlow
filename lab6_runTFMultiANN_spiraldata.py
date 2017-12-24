@@ -123,78 +123,81 @@ def neural_net(x):
     return out_layer
 
 # Construct model
-logits = neural_net(X)
-prediction = tf.nn.relu(logits)
+g = tf.Graph()
+im
+with g.as_default():
+    logits = neural_net(X)
+    prediction = tf.nn.relu(logits)
 
-# Define loss and optimizer
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+    # Define loss and optimizer
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 
-# Evaluate model
-correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+    # Evaluate model
+    correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
+    accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
-errRateTraining     = np.zeros(training_epochs)
-errRateValidation   = np.zeros(training_epochs)
+    errRateTraining     = np.zeros(training_epochs)
+    errRateValidation   = np.zeros(training_epochs)
 
-# Initialize the variables (i.e. assign their default value)
-init = tf.global_variables_initializer()
+    # Initialize the variables (i.e. assign their default value)
+    init = tf.global_variables_initializer()
 
-# Start training
-with tf.Session() as sess:
+    # Start training
+    with tf.Session() as sess:
 
-    # Run the initializer
-    sess.run(init)
+        # Run the initializer
+        sess.run(init)
 
-    for epoch in range(training_epochs):
-        avg_cost = 0.
-        total_batch = int(training_size/batch_size)
+        for epoch in range(training_epochs):
+            avg_cost = 0.
+            total_batch = int(training_size/batch_size)
 
-        for i in range(total_batch):
-            data_start_index = i * batch_size
-            data_end_index = (i + 1) * batch_size
-            # feed traing data --------------------------
-            batch_xs = x_training_data[data_start_index:data_end_index, :]
-            batch_ts = t_training_data[data_start_index:data_end_index, :]
+            for i in range(total_batch):
+                data_start_index = i * batch_size
+                data_end_index = (i + 1) * batch_size
+                # feed traing data --------------------------
+                batch_xs = x_training_data[data_start_index:data_end_index, :]
+                batch_ts = t_training_data[data_start_index:data_end_index, :]
 
-            #----------------------------------------------
-            # Run optimization op (backprop) and cost op (to get loss value)
-            # feedign training data
-            _, local_batch_cost = sess.run([optimizer,cost], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
+                #----------------------------------------------
+                # Run optimization op (backprop) and cost op (to get loss value)
+                # feedign training data
+                _, local_batch_cost = sess.run([optimizer,cost], feed_dict={X: batch_xs,
+                                                              Y: batch_ts})
 
-            # Compute average loss
-            avg_cost += local_batch_cost / total_batch
-            # print ("At %d-th batch in %d-epoch, avg_cost = %f" % (i,epoch,avg_cost) )
+                # Compute average loss
+                avg_cost += local_batch_cost / total_batch
+                # print ("At %d-th batch in %d-epoch, avg_cost = %f" % (i,epoch,avg_cost) )
 
-            # Display logs per epoch step
-        if display_step == 0:
-            continue
-        elif (epoch + 1) % display_step == 0:
-            # print("Iteration:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(avg_cost))
-            batch_train_xs = x_training_data
-            batch_train_ys = t_training_data
-            batch_valid_xs = x_validation_data
-            batch_valid_ys = t_validation_data
+                # Display logs per epoch step
+            if display_step == 0:
+                continue
+            elif (epoch + 1) % display_step == 0:
+                # print("Iteration:", '%04d' % (epoch + 1), "cost=", "{:.9f}".format(avg_cost))
+                batch_train_xs = x_training_data
+                batch_train_ys = t_training_data
+                batch_valid_xs = x_validation_data
+                batch_valid_ys = t_validation_data
 
-            errRateTraining[epoch] = 1.0 - accuracy.eval({X: batch_train_xs, \
-                                                          Y: batch_train_ys}, session=sess)
+                errRateTraining[epoch] = 1.0 - accuracy.eval({X: batch_train_xs, \
+                                                              Y: batch_train_ys}, session=sess)
 
-            errRateValidation[epoch] = 1.0 - accuracy.eval({X: batch_valid_xs, \
-                                                            Y: batch_valid_ys}, session=sess)
+                errRateValidation[epoch] = 1.0 - accuracy.eval({X: batch_valid_xs, \
+                                                                Y: batch_valid_ys}, session=sess)
 
-            print("Training set Err rate: %s"   % errRateTraining[epoch])
-            print("Validation set Err rate: %s" % errRateValidation[epoch])
+                print("Training set Err rate: %s"   % errRateTraining[epoch])
+                print("Validation set Err rate: %s" % errRateValidation[epoch])
 
-        print("--------------------------------------------")
+            print("--------------------------------------------")
 
-    print("Optimization Finished!")
+        print("Optimization Finished!")
 
-    # Calculate accuracy for test images
-    ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
+        # Calculate accuracy for test images
+        ##-------------------------------------------
+        # # training Result display
+        print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
 
 
     hfig2 = plt.figure(2,figsize=(10,10))
