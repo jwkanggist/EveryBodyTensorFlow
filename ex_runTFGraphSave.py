@@ -22,6 +22,9 @@ import pandas as pd
 tf.reset_default_graph()
 
 # construct naive three varible computational graph
+# - Note that the variable naming is important to get association
+# - between python and graph variables in graph restoring.
+
 v1 = tf.Variable(0, name='variable1')
 v2 = tf.Variable(2, name='variable2')
 v3 = tf.Variable(3, name='variable3')

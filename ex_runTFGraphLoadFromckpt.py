@@ -37,12 +37,14 @@ with tf.Session() as sess:
 
     # graph restoring
     saver.restore(sess, model_filename)
-    tf.get_default_graph().as_graph_def()
+
+    #tf.get_default_graph().as_graph_def()
 
     # association of variables
-    v1 = sess.graph.get_tensor_by_name("variable1:0")
-    v2 = sess.graph.get_tensor_by_name("variable2:0")
-    v3 = sess.graph.get_tensor_by_name("variable3:0")
+    # - Therefore, it is important to label variables with name
+    v1 = sess.graph.get_tensor_by_name(name="variable1:0")
+    v2 = sess.graph.get_tensor_by_name(name="variable2:0")
+    v3 = sess.graph.get_tensor_by_name(name="variable3:0")
 
     # Check the values of the variables
     print("After model restored.")

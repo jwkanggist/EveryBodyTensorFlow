@@ -28,7 +28,7 @@ model_filename = os.path.join(model_dir,filename)
 graph1 = tf.Graph()
 
 with graph1.as_default():
-    # pb 파일 읽어오기
+    # load TF computational graph from a pb file
     with gfile.FastGFile(model_filename,'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
