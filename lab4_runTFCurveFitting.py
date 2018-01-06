@@ -181,31 +181,31 @@ with tf.Session() as sess:
     pred_d = sess.run(d)
 
 
-    ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: y_validation_data},session=sess)/validation_size)
+##-------------------------------------------
+# # training Result display
+print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: y_validation_data},session=sess)/validation_size)
 
 
-    hfig1 = plt.figure(1,figsize=(10,10))
-    epoch_index = np.array([elem for elem in range(training_epochs)])
-    plt.plot(epoch_index,error_rate_training,label='Training data',color='r',marker='o')
-    plt.plot(epoch_index,error_rate_validation,label='Validation data',color='b',marker='x')
-    plt.legend()
-    plt.title('MSE of prediction:')
-    plt.xlabel('Iteration epoch')
-    plt.ylabel('MSE')
+hfig1 = plt.figure(1,figsize=(10,10))
+epoch_index = np.array([elem for elem in range(training_epochs)])
+plt.plot(epoch_index,error_rate_training,label='Training data',color='r',marker='o')
+plt.plot(epoch_index,error_rate_validation,label='Validation data',color='b',marker='x')
+plt.legend()
+plt.title('MSE of prediction:')
+plt.xlabel('Iteration epoch')
+plt.ylabel('MSE')
 
-    hfig2 = plt.figure(2,figsize=(10,10))
+hfig2 = plt.figure(2,figsize=(10,10))
 
-    pred_y = pred_c * np.cos(pred_a * x_data[:,0] + pred_b) +pred_d
+pred_y = pred_c * np.cos(pred_a * x_data[:,0] + pred_b) +pred_d
 
-    plt.plot(x_validation_data[:,0],y_validation_data[:,0],label='noisy data',color='b',marker='*')
-    plt.plot(x_validation_data[:,0], pred_y,label='prediction',color='r')
-    plt.legend()
-    plt.title('A line fitting example:')
-    plt.xlabel('X data')
-    plt.ylabel('Y data')
-    # FIG_SAVE_DIR = getcwd() + '/figs/'
-    # hfig1.savefig(FIG_SAVE_DIR + 'runExample_TFLogisticReg_aymeric_ErrRate.png')
+plt.plot(x_validation_data[:,0],y_validation_data[:,0],label='noisy data',color='b',marker='*')
+plt.plot(x_validation_data[:,0], pred_y,label='prediction',color='r')
+plt.legend()
+plt.title('A line fitting example:')
+plt.xlabel('X data')
+plt.ylabel('Y data')
+# FIG_SAVE_DIR = getcwd() + '/figs/'
+# hfig1.savefig(FIG_SAVE_DIR + 'runExample_TFLogisticReg_aymeric_ErrRate.png')
 
-    # hfig1.clear()
+# hfig1.clear()

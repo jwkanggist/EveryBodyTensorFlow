@@ -67,7 +67,6 @@ plt.legend()
 
 
 # configure training parameters =====================================
-total_steps = 2000
 learning_rate = 0.001
 training_epochs = 100
 batch_size = 50
@@ -117,7 +116,8 @@ prediction = tf.nn.softmax(logits)
 
 # Define loss and optimizer
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+#optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 
 # Evaluate model
@@ -184,19 +184,19 @@ with tf.Session() as sess:
 
     print("Optimization Finished!")
 
-    # Calculate accuracy for test images
-    ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
+# Calculate accuracy for test images
+##-------------------------------------------
+# # training Result display
+print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
 
 
-    hfig2 = plt.figure(2,figsize=(10,10))
-    epoch_index = np.array([elem for elem in range(training_epochs)])
-    plt.plot(epoch_index,errRateTraining,label='Training data',color='r',marker='o')
-    plt.plot(epoch_index,errRateValidation,label='Validation data',color='b',marker='x')
-    plt.legend()
-    plt.title('Classification Error Rate of prediction:')
-    plt.xlabel('Iteration epoch')
-    plt.ylabel('error Rate')
+hfig2 = plt.figure(2,figsize=(10,10))
+epoch_index = np.array([elem for elem in range(training_epochs)])
+plt.plot(epoch_index,errRateTraining,label='Training data',color='r',marker='o')
+plt.plot(epoch_index,errRateValidation,label='Validation data',color='b',marker='x')
+plt.legend()
+plt.title('Classification Error Rate of prediction:')
+plt.xlabel('Iteration epoch')
+plt.ylabel('error Rate')
 
 

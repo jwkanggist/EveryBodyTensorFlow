@@ -222,29 +222,29 @@ with tf.Session() as sess:
     Wout = sess.run(W)
     bout = sess.run(b)
 
-    ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: t_validation_data},session=sess)/validation_size)
+##-------------------------------------------
+# # training Result display
+print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: t_validation_data},session=sess)/validation_size)
 
 
-    hfig2 = plt.figure(2,figsize=(10,10))
-    epoch_index = np.array([elem for elem in range(training_epochs)])
-    plt.plot(epoch_index,errRateTraining,label='Training data',color='r',marker='o')
-    plt.plot(epoch_index,errRateValidation,label='Validation data',color='b',marker='x')
-    plt.legend()
-    plt.title('Classification Error Rate of prediction:')
-    plt.xlabel('Iteration epoch')
-    plt.ylabel('error Rate')
+hfig2 = plt.figure(2,figsize=(10,10))
+epoch_index = np.array([elem for elem in range(training_epochs)])
+plt.plot(epoch_index,errRateTraining,label='Training data',color='r',marker='o')
+plt.plot(epoch_index,errRateValidation,label='Validation data',color='b',marker='x')
+plt.legend()
+plt.title('Classification Error Rate of prediction:')
+plt.xlabel('Iteration epoch')
+plt.ylabel('error Rate')
 
-    hfig3 = plt.figure(3,figsize=(10,10))
+hfig3 = plt.figure(3,figsize=(10,10))
 
-    plt.scatter(x_class0[:,0], x_class0[:,1], color='b', label='class0')
-    plt.scatter(x_class1[:,0], x_class1[:,1], color='r', label='class1')
-    x1_classifier = np.linspace(min(x_data[:,0]),max(x_data[:,0]),50)
-    x2_classifier = - (Wout[0,0]*x1_classifier + bout[0]) / Wout[1,0]
-    plt.plot(x1_classifier,x2_classifier,color='k',label='Classifier')
-    plt.legend()
-    plt.title('Logistic Reg. example:')
-    plt.xlabel('X1 data')
-    plt.ylabel('X2 data')
+plt.scatter(x_class0[:,0], x_class0[:,1], color='b', label='class0')
+plt.scatter(x_class1[:,0], x_class1[:,1], color='r', label='class1')
+x1_classifier = np.linspace(min(x_data[:,0]),max(x_data[:,0]),50)
+x2_classifier = - (Wout[0,0]*x1_classifier + bout[0]) / Wout[1,0]
+plt.plot(x1_classifier,x2_classifier,color='k',label='Classifier')
+plt.legend()
+plt.title('Logistic Reg. example:')
+plt.xlabel('X1 data')
+plt.ylabel('X2 data')
 
