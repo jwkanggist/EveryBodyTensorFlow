@@ -111,10 +111,8 @@ t_validation_data = t_data[training_size:-1,:]
 
 
 # configure training parameters =====================================
-total_steps = 2000
-local_steps = 50
 learning_rate = 0.01
-training_epochs = int(total_steps / local_steps)
+training_epochs = 50
 batch_size = 100
 display_step = 1
 

@@ -59,10 +59,9 @@ y_validation_data = y_data[:,training_size:-1]
 
 
 # configure training parameters =====================================
-total_steps = 200
-local_steps = 10
+
 learning_rate = 0.000001
-training_epochs = int(total_steps / local_steps)
+training_epochs = 20
 batch_size = 100
 display_step = 1
 

@@ -71,10 +71,8 @@ y_validation_data = y_data[:,training_size:-1]
 # plt.legend()
 
 # configure training parameters =====================================
-total_steps = 1000
-local_steps = 50
 learning_rate = 0.01
-training_epochs = int(total_steps / local_steps)
+training_epochs = 20
 batch_size = 100
 display_step = 1
 
