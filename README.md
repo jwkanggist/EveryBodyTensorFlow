@@ -21,3 +21,9 @@ for educational purpose.
 Related PDF material (Korean) is given in
 [link] (https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU)
 
+## Code Reference
+Aymeric's repoo
+- https://github.com/aymericdamien/TensorFlow-Examples
+Prof. Sung Kim’s repo
+- https://github.com/hunkim/DeepLearningZeroToAll   
+
