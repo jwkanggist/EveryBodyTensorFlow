@@ -1,0 +1,718 @@
+node {
+  name: "variable1/initial_value"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 0
+      }
+    }
+  }
+}
+node {
+  name: "variable1"
+  op: "VariableV2"
+  attr {
+    key: "container"
+    value {
+      s: ""
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "shape"
+    value {
+      shape {
+      }
+    }
+  }
+  attr {
+    key: "shared_name"
+    value {
+      s: ""
+    }
+  }
+}
+node {
+  name: "variable1/Assign"
+  op: "Assign"
+  input: "variable1"
+  input: "variable1/initial_value"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable1"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "variable1/read"
+  op: "Identity"
+  input: "variable1"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable1"
+      }
+    }
+  }
+}
+node {
+  name: "variable2/initial_value"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 2
+      }
+    }
+  }
+}
+node {
+  name: "variable2"
+  op: "VariableV2"
+  attr {
+    key: "container"
+    value {
+      s: ""
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "shape"
+    value {
+      shape {
+      }
+    }
+  }
+  attr {
+    key: "shared_name"
+    value {
+      s: ""
+    }
+  }
+}
+node {
+  name: "variable2/Assign"
+  op: "Assign"
+  input: "variable2"
+  input: "variable2/initial_value"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable2"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "variable2/read"
+  op: "Identity"
+  input: "variable2"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable2"
+      }
+    }
+  }
+}
+node {
+  name: "variable3/initial_value"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 3
+      }
+    }
+  }
+}
+node {
+  name: "variable3"
+  op: "VariableV2"
+  attr {
+    key: "container"
+    value {
+      s: ""
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "shape"
+    value {
+      shape {
+      }
+    }
+  }
+  attr {
+    key: "shared_name"
+    value {
+      s: ""
+    }
+  }
+}
+node {
+  name: "variable3/Assign"
+  op: "Assign"
+  input: "variable3"
+  input: "variable3/initial_value"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable3"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "variable3/read"
+  op: "Identity"
+  input: "variable3"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable3"
+      }
+    }
+  }
+}
+node {
+  name: "init"
+  op: "NoOp"
+  input: "^variable1/Assign"
+  input: "^variable2/Assign"
+  input: "^variable3/Assign"
+}
+node {
+  name: "save/Const"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+        }
+        string_val: "model"
+      }
+    }
+  }
+}
+node {
+  name: "save/SaveV2/tensor_names"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 3
+          }
+        }
+        string_val: "variable1"
+        string_val: "variable2"
+        string_val: "variable3"
+      }
+    }
+  }
+}
+node {
+  name: "save/SaveV2/shape_and_slices"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 3
+          }
+        }
+        string_val: ""
+        string_val: ""
+        string_val: ""
+      }
+    }
+  }
+}
+node {
+  name: "save/SaveV2"
+  op: "SaveV2"
+  input: "save/Const"
+  input: "save/SaveV2/tensor_names"
+  input: "save/SaveV2/shape_and_slices"
+  input: "variable1"
+  input: "variable2"
+  input: "variable3"
+  attr {
+    key: "dtypes"
+    value {
+      list {
+        type: DT_INT32
+        type: DT_INT32
+        type: DT_INT32
+      }
+    }
+  }
+}
+node {
+  name: "save/control_dependency"
+  op: "Identity"
+  input: "save/Const"
+  input: "^save/SaveV2"
+  attr {
+    key: "T"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@save/Const"
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2/tensor_names"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        string_val: "variable1"
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2/shape_and_slices"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        string_val: ""
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2"
+  op: "RestoreV2"
+  input: "save/Const"
+  input: "save/RestoreV2/tensor_names"
+  input: "save/RestoreV2/shape_and_slices"
+  attr {
+    key: "dtypes"
+    value {
+      list {
+        type: DT_INT32
+      }
+    }
+  }
+}
+node {
+  name: "save/Assign"
+  op: "Assign"
+  input: "variable1"
+  input: "save/RestoreV2"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable1"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "save/RestoreV2_1/tensor_names"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        string_val: "variable2"
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2_1/shape_and_slices"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        string_val: ""
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2_1"
+  op: "RestoreV2"
+  input: "save/Const"
+  input: "save/RestoreV2_1/tensor_names"
+  input: "save/RestoreV2_1/shape_and_slices"
+  attr {
+    key: "dtypes"
+    value {
+      list {
+        type: DT_INT32
+      }
+    }
+  }
+}
+node {
+  name: "save/Assign_1"
+  op: "Assign"
+  input: "variable2"
+  input: "save/RestoreV2_1"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable2"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "save/RestoreV2_2/tensor_names"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        string_val: "variable3"
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2_2/shape_and_slices"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_STRING
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_STRING
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        string_val: ""
+      }
+    }
+  }
+}
+node {
+  name: "save/RestoreV2_2"
+  op: "RestoreV2"
+  input: "save/Const"
+  input: "save/RestoreV2_2/tensor_names"
+  input: "save/RestoreV2_2/shape_and_slices"
+  attr {
+    key: "dtypes"
+    value {
+      list {
+        type: DT_INT32
+      }
+    }
+  }
+}
+node {
+  name: "save/Assign_2"
+  op: "Assign"
+  input: "variable3"
+  input: "save/RestoreV2_2"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@variable3"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "save/restore_all"
+  op: "NoOp"
+  input: "^save/Assign"
+  input: "^save/Assign_1"
+  input: "^save/Assign_2"
+}
+versions {
+  producer: 22
+}

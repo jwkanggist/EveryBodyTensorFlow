@@ -31,6 +31,8 @@ with g.as_default():
 
     # 변수를 사용하기 위해서 'init' 연산을 실행
     sess.run(init_op)
+
+    #
     # 'state'의 초기값 출력
     print(sess.run(state))
     # 'state'를 갱신하는 연산 실행 후 'state'를 출력

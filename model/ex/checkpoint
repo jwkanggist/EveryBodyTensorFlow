@@ -1,0 +1,3 @@
+model_checkpoint_path: "/Users/jwkangmacpro/SourceCodes/EveryBodyTensorFlow/model/ex/model_variable.ckpt-5"
+all_model_checkpoint_paths: "/Users/jwkangmacpro/SourceCodes/EveryBodyTensorFlow/model/ex/model_variable.ckpt-0"
+all_model_checkpoint_paths: "/Users/jwkangmacpro/SourceCodes/EveryBodyTensorFlow/model/ex/model_variable.ckpt-5"

@@ -2,12 +2,14 @@
 #! /usr/bin/env python
 '''
 #------------------------------------------------------------
-    filename: lab6_runTFMultiANN_spiraldata.py
+    filename: lab7_runTCcheckGradientVanishing_spiraldata.py
 
-    A Multi-Hidden Layers Fully Connected Neural Network implementation with TensorFlow.
-    This example is using two class spiral data
+    To check Gradient Vanishing problem in
+    A Multi-Hidden Layers Fully Connected Neural Network.
 
-    written by Jaewook Kang @ Sep 2017
+    This example data set is using two class spiral data
+
+    written by Jaewook Kang @ Jan 2018
 #------------------------------------------------------------
 '''
 
@@ -68,17 +70,21 @@ plt.legend()
 
 
 # configure training parameters =====================================
-learning_rate = 0.005
-training_epochs = 200
-batch_size = 50
+learning_rate = 0.00001
+training_epochs = 5
+batch_size = 100
 display_step = 1
-
+total_batch = int(training_size / batch_size)
 
 # computational TF graph construction ================================
 # Network Parameters
-n_hidden_1 = 7 # 1st layer number of neurons
+n_hidden_1 = 10 # 1st layer number of neurons
 n_hidden_2 = 7 # 2nd layer number of neurons
-n_hidden_3 = 4 # 3rd layer number of neurons
+n_hidden_3 = 7 # 3rd layer number of neurons
+n_hidden_4 = 4 # 4rd layer number of neurons
+n_hidden_5 = 4 # 5rd layer number of neurons
+
+
 num_input = xsize   # two-dimensional input X = [x1 x2]
 num_classes = ysize # 2 class
 
@@ -88,21 +94,25 @@ Y = tf.placeholder(tf.float32, [None, num_classes])
 
 # Store layers weight & bias
 weights = {
-    'h1': tf.Variable(tf.random_normal([num_input, n_hidden_1])),
+    'h1': tf.Variable(tf.random_normal([num_input,  n_hidden_1])),
     'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
-    'h3': tf.Variable (tf.random_normal([n_hidden_2, n_hidden_3])),
-    'out': tf.Variable(tf.random_normal([n_hidden_3, num_classes]))
+    'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3])),
+    'h4': tf.Variable(tf.random_normal([n_hidden_3, n_hidden_4])),
+    'h5': tf.Variable(tf.random_normal([n_hidden_4, n_hidden_5])),
+    'out':tf.Variable(tf.random_normal([n_hidden_5, num_classes]))
 }
 biases = {
     'b1': tf.Variable(tf.random_normal([n_hidden_1])),
     'b2': tf.Variable(tf.random_normal([n_hidden_2])),
     'b3': tf.Variable(tf.random_normal([n_hidden_3])),
+    'b4': tf.Variable(tf.random_normal([n_hidden_4])),
+    'b5': tf.Variable(tf.random_normal([n_hidden_5])),
     'out': tf.Variable(tf.random_normal([num_classes]))
 }
 
 # Create model
 def neural_net(x):
-    # Hidden fully connected layer with 7 neurons
+    # Input fully connected layer with 10 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
     layer_1 = tf.nn.softmax(layer_1)
 
@@ -110,18 +120,23 @@ def neural_net(x):
     layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
     layer_2 = tf.nn.softmax(layer_2)
 
-    # Hidden fully connected layer with 4 neurons
+    # Hidden fully connected layer with 7 neurons
     layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
     layer_3 = tf.nn.softmax(layer_3)
 
+    # Hidden fully connected layer with 4 neurons
+    layer_4 = tf.add(tf.matmul(layer_3, weights['h4']), biases['b4'])
+    layer_4 = tf.nn.softmax(layer_4)
+
+    # Hidden fully connected layer with 4 neurons
+    layer_5 = tf.add(tf.matmul(layer_4, weights['h5']), biases['b5'])
+    layer_5 = tf.nn.softmax(layer_5)
+
     # Output fully connected layer with a neuron for each class
-    out_layer = tf.matmul(layer_3, weights['out']) + biases['out']
+    out_layer = tf.matmul(layer_5, weights['out']) + biases['out']
     return out_layer
 
 # Construct model
-#graph0 = tf.Graph()
-
-#with graph0.as_default():
 logits = neural_net(X)
 prediction = tf.nn.softmax(logits)
 
@@ -140,6 +155,25 @@ errRateValidation   = np.zeros(training_epochs)
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
 
+# for visualization of vanishing gradient problem
+grad_wrt_weight_layer1_tensor = tf.gradients(cost,weights['h1'],\
+                                             name='grad_wrt_weight_layer1')
+grad_wrt_weight_layer2_tensor = tf.gradients(cost,weights['h2'],\
+                                             name='grad_wrt_weight_layer2')
+grad_wrt_weight_layer3_tensor = tf.gradients(cost,weights['h3'],\
+                                             name='grad_wrt_weight_layer3')
+grad_wrt_weight_layer4_tensor = tf.gradients(cost,weights['h4'],\
+                                             name='grad_wrt_weight_layer4')
+grad_wrt_weight_layer5_tensor = tf.gradients(cost,weights['h5'],\
+                                             name='grad_wrt_weight_layer5')
+
+grad_wrt_weight_layer1_iter = np.zeros([total_batch,1])
+grad_wrt_weight_layer2_iter = np.zeros([total_batch,1])
+grad_wrt_weight_layer3_iter = np.zeros([total_batch,1])
+grad_wrt_weight_layer4_iter = np.zeros([total_batch,1])
+grad_wrt_weight_layer5_iter = np.zeros([total_batch,1])
+
+
 # Start training
 with tf.Session() as sess:
 
@@ -148,7 +182,6 @@ with tf.Session() as sess:
 
     for epoch in range(training_epochs):
         avg_cost = 0.
-        total_batch = int(training_size/batch_size)
 
         for i in range(total_batch):
             data_start_index = i * batch_size
@@ -163,8 +196,44 @@ with tf.Session() as sess:
             _, local_batch_cost = sess.run([optimizer,cost], feed_dict={X: batch_xs,
                                                           Y: batch_ts})
 
+            if epoch == training_epochs - 1:
+                # print ('Gradient calculation to see gradient vanishing problem')
+                _, grad_wrt_weight_layer1 = sess.run([optimizer,grad_wrt_weight_layer1_tensor], feed_dict={X: batch_xs,
+                                                          Y: batch_ts})
+                _, grad_wrt_weight_layer2 = sess.run([optimizer,grad_wrt_weight_layer2_tensor], feed_dict={X: batch_xs,
+                                                          Y: batch_ts})
+                _, grad_wrt_weight_layer3 = sess.run([optimizer,grad_wrt_weight_layer3_tensor], feed_dict={X: batch_xs,
+                                                          Y: batch_ts})
+                _, grad_wrt_weight_layer4 = sess.run([optimizer,grad_wrt_weight_layer4_tensor], feed_dict={X: batch_xs,
+                                                          Y: batch_ts})
+                _, grad_wrt_weight_layer5 = sess.run([optimizer,grad_wrt_weight_layer5_tensor], feed_dict={X: batch_xs,
+                                                          Y: batch_ts})
+                grad_wrt_weight_layer1 = np.array(grad_wrt_weight_layer1)
+                grad_wrt_weight_layer2 = np.array(grad_wrt_weight_layer2)
+                grad_wrt_weight_layer3 = np.array(grad_wrt_weight_layer3)
+                grad_wrt_weight_layer4 = np.array(grad_wrt_weight_layer4)
+                grad_wrt_weight_layer5 = np.array(grad_wrt_weight_layer5)
+
+                grad_wrt_weight_layer1 = grad_wrt_weight_layer1.reshape(grad_wrt_weight_layer1.shape[1],
+                                                                    grad_wrt_weight_layer1.shape[2])
+                grad_wrt_weight_layer2 = grad_wrt_weight_layer2.reshape(grad_wrt_weight_layer2.shape[1],
+                                                                    grad_wrt_weight_layer2.shape[2])
+                grad_wrt_weight_layer3 = grad_wrt_weight_layer3.reshape(grad_wrt_weight_layer3.shape[1],
+                                                                    grad_wrt_weight_layer3.shape[2])
+                grad_wrt_weight_layer4 = grad_wrt_weight_layer4.reshape(grad_wrt_weight_layer4.shape[1],
+                                                                    grad_wrt_weight_layer4.shape[2])
+                grad_wrt_weight_layer5 = grad_wrt_weight_layer5.reshape(grad_wrt_weight_layer5.shape[1],
+                                                                    grad_wrt_weight_layer5.shape[2])
+
+                grad_wrt_weight_layer1_iter[i] = grad_wrt_weight_layer1.mean()
+                grad_wrt_weight_layer2_iter[i] = grad_wrt_weight_layer2.mean()
+                grad_wrt_weight_layer3_iter[i] = grad_wrt_weight_layer3.mean()
+                grad_wrt_weight_layer4_iter[i] = grad_wrt_weight_layer4.mean()
+                grad_wrt_weight_layer5_iter[i] = grad_wrt_weight_layer5.mean()
+
             # Compute average loss
             avg_cost += local_batch_cost / total_batch
+
             # print ("At %d-th batch in %d-epoch, avg_cost = %f" % (i,epoch,avg_cost) )
 
             # Display logs per epoch step
@@ -185,8 +254,7 @@ with tf.Session() as sess:
 
             print("Training set Err rate: %s"   % errRateTraining[epoch])
             print("Validation set Err rate: %s" % errRateValidation[epoch])
-
-        print("--------------------------------------------")
+            print("--------------------------------------------")
 
     print("Optimization Finished!")
 
@@ -197,12 +265,13 @@ with tf.Session() as sess:
 
 
 hfig2 = plt.figure(2,figsize=(10,10))
-epoch_index = np.array([elem for elem in range(training_epochs)])
-plt.plot(epoch_index,errRateTraining,label='Training data',color='r',marker='o')
-plt.plot(epoch_index,errRateValidation,label='Validation data',color='b',marker='x')
+batch_index = np.array([elem for elem in range(total_batch)])
+plt.plot(batch_index,grad_wrt_weight_layer1_iter,label='layer1',color='b',marker='o')
+plt.plot(batch_index,grad_wrt_weight_layer4_iter,label='layer4',color='y',marker='o')
+plt.plot(batch_index,grad_wrt_weight_layer5_iter,label='layer5',color='r',marker='o')
 plt.legend()
-plt.title('Classification Error Rate of prediction:')
-plt.xlabel('Iteration epoch')
-plt.ylabel('error Rate')
+plt.title('Weight Gradient over minibatch iter @ training epoch = %s' % training_epochs)
+plt.xlabel('minibatch iter')
+plt.ylabel('Weight Gradient')
 
 
