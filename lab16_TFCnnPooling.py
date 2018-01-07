@@ -2,7 +2,7 @@
 #! /usr/bin/env python
 '''
 #------------------------------------------------------------
-    filename: lab8_runCNNPooling.py
+    filename: lab16_runCNNPooling.py
 
     Generation of exemplary feature of convolutional neural network
     using max-pooling operation

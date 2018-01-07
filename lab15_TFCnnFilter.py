@@ -2,7 +2,7 @@
 #! /usr/bin/env python
 '''
 #------------------------------------------------------------
-    filename: lan7_runCNNFilter.py
+    filename: lan15_runCNNFilter.py
 
     Generation of exemplary feature of convolutional neural network
     using two types of filters: horizontal and vertical filters
