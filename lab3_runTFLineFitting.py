@@ -11,9 +11,7 @@
 '''
 from os import getcwd
 
-
 import math
-
 from IPython import display
 from matplotlib import cm
 from matplotlib import gridspec
@@ -33,7 +31,6 @@ from tensorflow.contrib.learn.python.learn import learn_io
 from tensorflow.examples.tutorials.mnist import input_data
 
 # generation of data set
-
 total_size = 5000
 training_size = 4000
 validation_size = 1000
@@ -41,8 +38,10 @@ validation_size = 1000
 xsize = 20
 
 x_data = np.zeros([xsize, total_size])
+
 a_true = 2
 b_true = 0.5
+
 for i in range(total_size):
     x_data[:,i] =  np.linspace(0,10,xsize)
 
@@ -78,9 +77,9 @@ y = tf.placeholder(tf.float32, [xsize,None])
 
 
 # Set model weights which is calculated in the TF graph
-a = tf.Variable(0.) # initialization by 1
+a = tf.Variable(0.,name='a') # initialization by 1
 # b = tf.Variable(tf.zeros([xsize]))
-b = tf.Variable(0.)
+b = tf.Variable(0.,name='b')
 
 print ('TF graph nodes are defined')
 ##--------------------- Define function -----------------
@@ -95,7 +94,7 @@ pred_y =  a * x + b
 cost = tf.reduce_mean(tf.reduce_sum( tf.square(y - pred_y) , reduction_indices=1), name="mse")
 
 # Gradient Descent
-optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
 
 print ('Functions in TF graph are ready')
 
@@ -114,8 +113,8 @@ correct_prediction = cost
 # tf.reduce_mean(x, 1) ==> [1.,  2.]
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-error_rate_training = np.zeros(training_epochs)
-error_rate_validation = np.zeros(training_epochs)
+error_rate_training     = np.zeros(training_epochs)
+error_rate_validation   = np.zeros(training_epochs)
 
 # Launch the graph (execution) ========================================
 # Initializing the variables
@@ -166,8 +165,8 @@ with tf.Session() as sess:
     pred_b = sess.run(b)
 
 ##-------------------------------------------
-# # training Result display
-print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: y_validation_data},session=sess)/validation_size)
+    # # training Result display
+    print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: y_validation_data},session=sess)/validation_size)
 
 
 hfig1 = plt.figure(1,figsize=(10,10))

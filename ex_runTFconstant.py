@@ -24,7 +24,7 @@ with g.as_default():
     sum = tf.add(x,y,name="sum_xy")
 
 
-    with tf.Session() as sess:
-        print ('sum.eval()=%d'%sum.eval())
-        print ('sess.run(sum)=%d'%sess.run(sum))
+with tf.Session(graph=g) as sess:
+    print ('sum.eval()=%d'%sum.eval())
+    print ('sess.run(sum)=%d'%sess.run(sum))
 
