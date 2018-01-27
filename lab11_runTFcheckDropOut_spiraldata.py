@@ -69,7 +69,7 @@ t_validation_data = t_data[training_size:-1,:]
 
 
 # configure training parameters =====================================
-learning_rate = 0.000001
+learning_rate = 0.0001
 training_epochs = 200
 batch_size = 100
 display_step = 1
@@ -117,48 +117,29 @@ def neural_net(x,dropout_on):
     # Input fully connected layer with 10 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
     layer_1 = tf.nn.relu(layer_1)
-    if dropout_on == True:
-        dropout_layer_1 = tf.layers.dropout(inputs=layer_1,rate=dropout_rate)
-    else:
-        dropout_layer_1 = layer_1
+    dropout_layer_1 = tf.layers.dropout(inputs=layer_1,rate=dropout_rate)
+
 
     # Hidden fully connected layer with 7 neurons
     layer_2 = tf.add(tf.matmul(dropout_layer_1, weights['h2']), biases['b2'])
     layer_2 = tf.nn.relu(layer_2)
-
-    if dropout_on == True:
-        dropout_layer_2 = tf.layers.dropout(inputs=layer_2,rate=  dropout_rate)
-    else:
-        dropout_layer_2 = layer_2
+    dropout_layer_2 = tf.layers.dropout(inputs=layer_2,rate=  dropout_rate)
 
 
     # Hidden fully connected layer with 7 neurons
     layer_3 = tf.add(tf.matmul(dropout_layer_2, weights['h3']), biases['b3'])
     layer_3 = tf.nn.relu(layer_3)
-
-    if dropout_on == True:
-        dropout_layer_3 = tf.layers.dropout(inputs=layer_3,rate= dropout_rate)
-    else:
-        dropout_layer_3 = layer_3
-
+    dropout_layer_3 = tf.layers.dropout(inputs=layer_3,rate= dropout_rate)
 
     # Hidden fully connected layer with 4 neurons
     layer_4 = tf.add(tf.matmul(dropout_layer_3, weights['h4']), biases['b4'])
     layer_4 = tf.nn.relu(layer_4)
-
-    if dropout_on == True:
-        dropout_layer_4 = tf.layers.dropout(inputs=layer_4,rate = dropout_rate)
-    else:
-        dropout_layer_4 = layer_4
+    dropout_layer_4 = tf.layers.dropout(inputs=layer_4,rate = dropout_rate)
 
     # Hidden fully connected layer with 4 neurons
     layer_5 = tf.add(tf.matmul(dropout_layer_4, weights['h5']), biases['b5'])
     layer_5 = tf.nn.relu(layer_5)
-
-    if dropout_on == True:
-        dropout_layer_5 = tf.layers.dropout(inputs=layer_5, rate=dropout_rate)
-    else:
-        dropout_layer_5 = layer_5
+    dropout_layer_5 = tf.layers.dropout(inputs=layer_5, rate=dropout_rate)
 
     # Output fully connected layer with a neuron for each class
     out_layer = tf.matmul(dropout_layer_5, weights['out']) + biases['out']
@@ -291,8 +272,6 @@ with tf.Session() as sess:
 
     # Calculate accuracy for test images
     ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
 
 
 hfig2 = plt.figure(2,figsize=(10,10))

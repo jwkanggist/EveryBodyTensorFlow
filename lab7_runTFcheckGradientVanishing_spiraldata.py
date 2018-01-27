@@ -258,11 +258,6 @@ with tf.Session() as sess:
 
     print("Optimization Finished!")
 
-    # Calculate accuracy for test images
-    ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
-
 
 hfig2 = plt.figure(2,figsize=(10,10))
 batch_index = np.array([elem for elem in range(total_batch)])
