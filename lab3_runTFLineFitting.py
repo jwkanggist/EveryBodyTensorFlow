@@ -168,7 +168,6 @@ with tf.Session() as sess:
     # # training Result display
     print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: y_validation_data},session=sess)/validation_size)
 
-
 hfig1 = plt.figure(1,figsize=(10,10))
 epoch_index = np.array([elem for elem in range(training_epochs)])
 plt.plot(epoch_index,error_rate_training,label='Training data',color='r',marker='o')

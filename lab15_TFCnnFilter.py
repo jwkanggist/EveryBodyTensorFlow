@@ -30,6 +30,7 @@ batch_size,height, width, channels = dataset.shape
 # creat two 7 X 7 filters
 filter_size = 7
 filters = np.zeros(shape=(filter_size,filter_size,channels,2),dtype=np.float32)
+
 filters[:, 3, :, 0] = 1 # vertical line filters
 filters[3, :, :, 1] = 1 # horizontal line filters
 
