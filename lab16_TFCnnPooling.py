@@ -31,12 +31,13 @@ batch_size,height, width, channels = dataset.shape
 # applying the 2 filter defined above
 X = tf.placeholder(tf.float32, shape=[None, height, width, channels],name='input')
 
-
+stride = 4
+tile_size = 4
 # prediction CNN with two filters and input X
 # X is the input mini-batch
 # 4 X 4 tiny kernel is used for max pooling: ksize=[batch_size=1,height=4,width=4,channels=1]
-# padding = 'VAILD', which means the conv layer uses zero padding
-pooling_output = tf.nn.max_pool(X,ksize=[1,4,4,1],strides=[1,4,4,1],padding='VALID')
+# padding = 'VAILD', which means the conv layer does not use zero padding
+pooling_output = tf.nn.max_pool(X,ksize=[1,tile_size,tile_size,1],strides=[1,stride,stride,1],padding='VALID')
 
 
 
