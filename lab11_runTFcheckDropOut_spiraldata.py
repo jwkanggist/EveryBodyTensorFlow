@@ -70,9 +70,9 @@ t_validation_data = t_data[training_size:-1,:]
 
 # configure training parameters =====================================
 learning_rate = 0.005
-training_epochs = 10
+training_epochs = 5000
 batch_size = 500
-display_step = 1
+display_step = 100
 total_batch = int(training_size / batch_size)
 dropout_rate = 0.8
 
