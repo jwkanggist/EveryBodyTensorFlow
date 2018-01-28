@@ -165,9 +165,6 @@ with tf.Session() as sess:
     pred_a = sess.run(a)
     pred_b = sess.run(b)
 
-##-------------------------------------------
-# # training Result display
-print("Validation set Err rate:", accuracy.eval({x: x_validation_data, y: y_validation_data},session=sess)/validation_size)
 
 
 hfig1 = plt.figure(1,figsize=(10,10))

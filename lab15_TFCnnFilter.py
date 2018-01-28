@@ -27,7 +27,7 @@ dataset = np.array([china,flower],dtype=np.float32)
 # load images data set size
 batch_size,height, width, channels = dataset.shape
 
-# creat two 3 X 3 filters
+# creat two 7 X 7 filters
 filters = np.zeros(shape=(7,7,channels,2),dtype=np.float32)
 filters[:, 3, :, 0] = 1 # vertical line filters
 filters[3, :, :, 1] = 1 # horizontal line filters
