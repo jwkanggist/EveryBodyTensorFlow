@@ -76,7 +76,7 @@ plt.legend()
 learning_rate = 0.00001
 training_epochs = 5
 batch_size = 100
-display_step = 10
+display_step = 1
 total_batch = int(training_size / batch_size)
 
 # computational TF graph construction ================================
@@ -261,10 +261,6 @@ with tf.Session() as sess:
 
     print("Optimization Finished!")
 
-    # Calculate accuracy for test images
-    ##-------------------------------------------
-    # # training Result display
-    print("Validation set Err rate:", accuracy.eval({X: x_validation_data, Y: t_validation_data},session=sess)/validation_size)
 
 
 hfig2 = plt.figure(2,figsize=(10,10))
