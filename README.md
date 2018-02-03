@@ -1,10 +1,10 @@
 # Everybody Tensorflow 
-### All right reserved @ Jaewook Kang 2017
-Final update 2017 10 27
---------------------------------------------------------
+
+- Final update 2017 10 27
+- All right reserved @ Jaewook Kang 2017
+
 
 ## Features
--------------------------------------------------------
 1.Including tensorflow codes for basic machine learning algorithms
 for educational purpose.
 
@@ -24,6 +24,7 @@ Related PDF material (Korean) is given in
 ## Code Reference
 Aymeric's repoo
 - https://github.com/aymericdamien/TensorFlow-Examples
+
 Prof. Sung Kim’s repo
 - https://github.com/hunkim/DeepLearningZeroToAll   
 

@@ -28,7 +28,9 @@ dataset = np.array([china,flower],dtype=np.float32)
 batch_size,height, width, channels = dataset.shape
 
 # creat two 7 X 7 filters
-filters = np.zeros(shape=(7,7,channels,2),dtype=np.float32)
+filter_size = 7
+filters = np.zeros(shape=(filter_size,filter_size,channels,2),dtype=np.float32)
+
 filters[:, 3, :, 0] = 1 # vertical line filters
 filters[3, :, :, 1] = 1 # horizontal line filters
 
@@ -36,12 +38,13 @@ filters[3, :, :, 1] = 1 # horizontal line filters
 # applying the 2 filter defined above
 X = tf.placeholder(tf.float32, shape=[None, height, width, channels],name='input')
 
-
+stride = 2
 # prediction CNN with two filters and input X
 # X is the input mini-batch
-# 3 X 3 filters is the set of filters to apply
-# padding = 'SAME', which means the conv layer does not use zero padding
-conv_output = tf.nn.conv2d(X,filters,strides=[1,2,2,1],padding='SAME')
+# 7 X 7 filters is the set of filters to apply
+# padding = 'SAME', which means the conv layer use zero padding to keep the same feature map size
+# padding = 'VALID', which mean the conv layer does not use zero padding
+conv_output = tf.nn.conv2d(X,filters,strides=[1,stride,stride,1],padding='SAME')
 
 
 with tf.Session() as sess:
