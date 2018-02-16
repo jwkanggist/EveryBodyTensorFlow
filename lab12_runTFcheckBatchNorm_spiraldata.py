@@ -51,7 +51,6 @@ training_size = int(np.floor(permutated_data.xdata1.size * 0.8))
 validation_size = total_size - training_size
 
 
-
 # data dividing
 x_training_data = x_data[0:training_size,:]
 t_training_data = t_data[0:training_size,:]
@@ -65,7 +64,7 @@ t_validation_data = t_data[training_size:-1,:]
 learning_rate = 0.1
 training_epochs = 100
 batch_size = 30
-display_step = 10
+display_step = 1
 total_batch = int(training_size / batch_size)
 
 # batch norm config
@@ -181,12 +180,18 @@ prediction = tf.nn.softmax(logits)
 # Define loss and optimizer
 cost        = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
 
+'''
+from Tensorflow API doc
+(https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm )
+Note: when training, the moving_mean and moving_variance need to be updated.
+By default the update ops are placed in tf.GraphKeys.UPDATE_OPS,
+so they need to be added as a dependency to the train_op'''
 update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
 with tf.control_dependencies(update_ops):
     optimizer   = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
 
-## when you use AdamOptimizer, instead of SGD, the error rate immediately becomes near zero.
-#optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+    ## when you use AdamOptimizer, instead of SGD, the error rate immediately becomes near zero.
+    #optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
@@ -257,16 +262,16 @@ with tf.Session() as sess:
 
     # Calculate accuracy for test images
     ##-------------------------------------------
-#data plot
-# hfig1= plt.figure(1,figsize=[10,10])
-# plt.scatter(data.xdata1.values[0:int(data.xdata1.size/2)],\
-#             data.xdata2.values[0:int(data.xdata1.size/2)], \
-#             color='b',label='class0')
-# plt.scatter(data.xdata1.values[int(data.xdata1.size/2)+2:-1],\
-#             data.xdata2.values[int(data.xdata1.size/2)+2:-1], \
-#             color='r',label='class1')
-# plt.title('Two Spiral data Example')
-# plt.legend()
+## data plot
+hfig1= plt.figure(1,figsize=[10,10])
+plt.scatter(data.xdata1.values[0:int(data.xdata1.size/2)],\
+            data.xdata2.values[0:int(data.xdata1.size/2)], \
+            color='b',label='class0')
+plt.scatter(data.xdata1.values[int(data.xdata1.size/2)+2:-1],\
+            data.xdata2.values[int(data.xdata1.size/2)+2:-1], \
+            color='r',label='class1')
+plt.title('Two Spiral data Example')
+plt.legend()
 
 
 
