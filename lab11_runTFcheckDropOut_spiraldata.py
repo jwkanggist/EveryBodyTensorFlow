@@ -63,7 +63,6 @@ t_validation_data = t_data[training_size:-1,:]
 
 # configure training parameters =====================================
 learning_rate = 0.005
-
 training_epochs = 5000
 batch_size = 500
 display_step = 100
@@ -112,40 +111,42 @@ biases = {
 }
 
 # Create model
-def neural_net(x):
+def neural_net(x,dropoutrate_io):
     # Input fully connected layer with 10 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
     layer_1 = tf.nn.relu(layer_1)
-    layer_1 = tf.layers.dropout(inputs=layer_1,rate=dropoutrate_in_training)
+    layer_1 = tf.layers.dropout(inputs=layer_1,rate=dropoutrate_io)
 
 
     # Hidden fully connected layer with 7 neurons
     layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
     layer_2 = tf.nn.relu(layer_2)
-    layer_2 = tf.layers.dropout(inputs=layer_2,rate=  dropoutrate_in_training)
+    layer_2 = tf.layers.dropout(inputs=layer_2,rate=  dropoutrate_io)
 
 
     # Hidden fully connected layer with 7 neurons
     layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
     layer_3 = tf.nn.relu(layer_3)
-    layer_3 = tf.layers.dropout(inputs=layer_3,rate= dropoutrate_in_training)
+    layer_3 = tf.layers.dropout(inputs=layer_3,rate= dropoutrate_io)
 
     # Hidden fully connected layer with 4 neurons
     layer_4 = tf.add(tf.matmul(layer_3, weights['h4']), biases['b4'])
     layer_4 = tf.nn.relu(layer_4)
-    layer_4 = tf.layers.dropout(inputs=layer_4,rate = dropoutrate_in_training)
+    layer_4 = tf.layers.dropout(inputs=layer_4,rate = dropoutrate_io)
 
     # Hidden fully connected layer with 4 neurons
     layer_5 = tf.add(tf.matmul(layer_4, weights['h5']), biases['b5'])
     layer_5 = tf.nn.relu(layer_5)
-    layer_5 = tf.layers.dropout(inputs=layer_5, rate=dropoutrate_in_training)
+    layer_5 = tf.layers.dropout(inputs=layer_5, rate=dropoutrate_io)
 
     # Output fully connected layer with a neuron for each class
     out_layer = tf.matmul(layer_5, weights['out']) + biases['out']
     return out_layer
 
 # Construct model
-logits = neural_net(X)
+logits = neural_net(x=X, \
+                    dropoutrate_io= dropoutrate_io)
+
 prediction = tf.nn.softmax(logits)
 
 # Define loss and optimizer
@@ -162,26 +163,27 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 errRatebyTrainingSet     = np.zeros(training_epochs)
 errRatebyValidationSet   = np.zeros(training_epochs)
 
-# Initialize the variables (i.e. assign their default value)
-init = tf.global_variables_initializer()
 
 # for visualization of vanishing gradient problem
 grad_wrt_weight_layer1_tensor = tf.gradients(cost,weights['h1'],\
-                                             name='grad_wrt_weight_layer1')
+                                         name='grad_wrt_weight_layer1')
 grad_wrt_weight_layer2_tensor = tf.gradients(cost,weights['h2'],\
-                                             name='grad_wrt_weight_layer2')
+                                         name='grad_wrt_weight_layer2')
 grad_wrt_weight_layer3_tensor = tf.gradients(cost,weights['h3'],\
-                                             name='grad_wrt_weight_layer3')
+                                         name='grad_wrt_weight_layer3')
 grad_wrt_weight_layer4_tensor = tf.gradients(cost,weights['h4'],\
-                                             name='grad_wrt_weight_layer4')
+                                         name='grad_wrt_weight_layer4')
 grad_wrt_weight_layer5_tensor = tf.gradients(cost,weights['h5'],\
-                                             name='grad_wrt_weight_layer5')
+                                         name='grad_wrt_weight_layer5')
 
 grad_wrt_weight_layer1_iter = np.zeros([total_batch,1])
 grad_wrt_weight_layer2_iter = np.zeros([total_batch,1])
 grad_wrt_weight_layer3_iter = np.zeros([total_batch,1])
 grad_wrt_weight_layer4_iter = np.zeros([total_batch,1])
 grad_wrt_weight_layer5_iter = np.zeros([total_batch,1])
+
+# Initialize the variables (i.e. assign their default value)
+init = tf.global_variables_initializer()
 
 
 # Start training
@@ -204,21 +206,34 @@ with tf.Session() as sess:
             #----------------------------------------------
             # Run optimization op (backprop) and cost op (to get loss value)
             # feedign training data
-            _, local_batch_cost = sess.run([optimizer,cost], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
+            _, local_batch_cost = sess.run([optimizer,cost], \
+                                           feed_dict={X: batch_xs,\
+                                                      Y: batch_ts,\
+                                                      dropoutrate_io: dropoutrate_in_training})
 
             if epoch == training_epochs - 1:
                 # print ('Gradient calculation to see gradient vanishing problem')
-                _, grad_wrt_weight_layer1 = sess.run([optimizer,grad_wrt_weight_layer1_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts, dropoutrate_io: dropoutrate_in_training})
-                _, grad_wrt_weight_layer2 = sess.run([optimizer,grad_wrt_weight_layer2_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts, dropoutrate_io: dropoutrate_in_training})
-                _, grad_wrt_weight_layer3 = sess.run([optimizer,grad_wrt_weight_layer3_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts, dropoutrate_io: dropoutrate_in_training})
-                _, grad_wrt_weight_layer4 = sess.run([optimizer,grad_wrt_weight_layer4_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts, dropoutrate_io: dropoutrate_in_training})
-                _, grad_wrt_weight_layer5 = sess.run([optimizer,grad_wrt_weight_layer5_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts, dropoutrate_io: dropoutrate_in_training})
+                _, grad_wrt_weight_layer1 = sess.run([optimizer,grad_wrt_weight_layer1_tensor], \
+                                                     feed_dict={X: batch_xs,\
+                                                                Y: batch_ts, \
+                                                                dropoutrate_io: dropoutrate_in_training})
+                _, grad_wrt_weight_layer2 = sess.run([optimizer,grad_wrt_weight_layer2_tensor], \
+                                                     feed_dict={X: batch_xs,\
+                                                                Y: batch_ts, \
+                                                                dropoutrate_io: dropoutrate_in_training})
+                _, grad_wrt_weight_layer3 = sess.run([optimizer,grad_wrt_weight_layer3_tensor], \
+                                                     feed_dict={X: batch_xs,\
+                                                                Y: batch_ts, \
+                                                                dropoutrate_io: dropoutrate_in_training})
+                _, grad_wrt_weight_layer4 = sess.run([optimizer,grad_wrt_weight_layer4_tensor], \
+                                                     feed_dict={X: batch_xs,\
+                                                                Y: batch_ts, \
+                                                                dropoutrate_io: dropoutrate_in_training})
+                _, grad_wrt_weight_layer5 = sess.run([optimizer,grad_wrt_weight_layer5_tensor], \
+                                                     feed_dict={X: batch_xs,\
+                                                                Y: batch_ts, \
+                                                                dropoutrate_io: dropoutrate_in_training})
+
                 grad_wrt_weight_layer1 = np.array(grad_wrt_weight_layer1)
                 grad_wrt_weight_layer2 = np.array(grad_wrt_weight_layer2)
                 grad_wrt_weight_layer3 = np.array(grad_wrt_weight_layer3)
@@ -260,11 +275,15 @@ with tf.Session() as sess:
             batch_valid_ys = t_validation_data
 
             # for error rate evaluation, the dropout rate must be 1.0
-            errRatebyTrainingSet[epoch] = 1.0 - accuracy.eval({X: batch_train_xs, \
-                                                          Y: batch_train_ys, dropoutrate_io: 1.0}, session=sess)
+            errRatebyTrainingSet[epoch] = 1.0 - accuracy.eval(feed_dict={X: batch_train_xs, \
+                                                                         Y: batch_train_ys,\
+                                                                         dropoutrate_io: 1.0}, \
+                                                              session=sess)
 
-            errRatebyValidationSet[epoch] = 1.0 - accuracy.eval({X: batch_valid_xs, \
-                                                            Y: batch_valid_ys, dropoutrate_io: 1.0}, session=sess)
+            errRatebyValidationSet[epoch] = 1.0 - accuracy.eval(feed_dict={X: batch_valid_xs, \
+                                                                           Y: batch_valid_ys,\
+                                                                           dropoutrate_io: 1.0},\
+                                                                session=sess)
 
             print("Training set Err rate: %s"   % errRatebyTrainingSet[epoch])
             print("Validation set Err rate: %s" % errRatebyValidationSet[epoch])
