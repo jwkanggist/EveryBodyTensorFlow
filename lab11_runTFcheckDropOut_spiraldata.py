@@ -4,9 +4,12 @@
 #------------------------------------------------------------
     filename: lab11_runTFcheckDropOut_spiraldata.py
 
-    To check effect of dropout in DNN network
+    This script wants to see how the Dropout technique can
+    mitigate Gradient Vanishing problem in
+    A Multi-Hidden Layers Fully Connected Neural Network.
 
-    This example data set is using two class spiral data
+    This example data set is using two class spiral data.
+    Applying the dropout to the lab7 example.
 
     written by Jaewook Kang @ Jan 2018
 #------------------------------------------------------------

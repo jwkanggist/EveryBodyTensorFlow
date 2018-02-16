@@ -7,10 +7,12 @@
     To check effect of Relu activation function over
     Deep neural networks.
     This script wants to see Relu activation can mitigate
-    Gradient Vanishing problem.
+    Gradient Vanishing problem in
     A Multi-Hidden Layers Fully Connected Neural Network.
 
-    This example data set is using two class spiral data
+    This example data set is using two class spiral data.
+    Applying the Relu activation to lab7 example
+    instead of softmax activation
 
     written by Jaewook Kang @ Jan 2018
 #------------------------------------------------------------
