@@ -2,17 +2,22 @@
 #! /usr/bin/env python
 '''
 #------------------------------------------------------------
-    filename: lab10_runTCcheckReLu_spiraldata.py
+    filename: lab12_runTCcheckBatchNorm_spiraldata.py
 
-    To check effect of Relu activation function over
-    Deep neural networks.
-    This script wants to see Relu activation can mitigate
-    Gradient Vanishing problem in
+    To check Gradient Vanishing problem in
+    A Multi-Hidden Layers Fully Connected Neural Network.
+    This script aim to see how the "batch normalization"
+    accelerate the training of
     A Multi-Hidden Layers Fully Connected Neural Network.
 
-    This example data set is using two class spiral data.
-    Applying the Relu activation to lab7 example
-    instead of softmax activation
+    Applying "batch normalization" to the lab10
+
+    This example data set is using two class spiral data
+
+    ref1:
+    https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm
+    ref2:
+    http://ruishu.io/2016/12/27/batchnorm/
 
     written by Jaewook Kang @ Jan 2018
 #------------------------------------------------------------
@@ -54,7 +59,6 @@ training_size = int(np.floor(permutated_data.xdata1.size * 0.8))
 validation_size = total_size - training_size
 
 
-
 # data dividing
 x_training_data = x_data[0:training_size,:]
 t_training_data = t_data[0:training_size,:]
@@ -63,20 +67,18 @@ x_validation_data = x_data[training_size:-1,:]
 t_validation_data = t_data[training_size:-1,:]
 
 
-# configure training parameters =====================================
-# To see mitigation of vanishing gradient problem
-# learning_rate = 0.00001
-# training_epochs = 5
-# batch_size = 100
-# display_step = 1
-# total_batch = int(training_size / batch_size)
 
-## for convergence
-learning_rate = 5E-3
-training_epochs = 5000
-batch_size = 500
+# configure training parameters =====================================
+learning_rate = 0.1
+training_epochs = 100
+batch_size = 30
 display_step = 1
 total_batch = int(training_size / batch_size)
+
+# batch norm config
+batch_norm_epsilon = 1E-5
+batch_norm_decay = 0.99
+
 
 # computational TF graph construction ================================
 # Network Parameters
@@ -87,12 +89,15 @@ n_hidden_4 = 4 # 4rd layer number of neurons
 n_hidden_5 = 4 # 5rd layer number of neurons
 
 
-num_input = xsize   # two-dimensional input X = [1x2]
+num_input   = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
+#-------------------------------
+
 
 # tf Graph input
-X = tf.placeholder(tf.float32, [None, num_input])
-Y = tf.placeholder(tf.float32, [None, num_classes])
+X           = tf.placeholder(tf.float32, [None, num_input],     name = 'x')
+Y           = tf.placeholder(tf.float32, [None, num_classes],   name = 'y')
+batchnorm_istraining_io = tf.placeholder(tf.bool,name='bn_phase')
 
 # Store layers weight & bias
 weights = {
@@ -112,26 +117,59 @@ biases = {
     'out': tf.Variable(tf.random_normal([num_classes]))
 }
 
+
 # Create model
-def neural_net(x):
+def neural_net(x,batchnorm_istraining_io,batch_norm_epsilon,batch_norm_decay):
     # Input fully connected layer with 10 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+    layer_1 = tf.contrib.layers.batch_norm(inputs=layer_1,\
+                                           decay = batch_norm_decay,\
+                                           center=True,\
+                                           scale= True,\
+                                           epsilon= batch_norm_epsilon,\
+                                           is_training = batchnorm_istraining_io)
     layer_1 = tf.nn.relu(layer_1)
+
 
     # Hidden fully connected layer with 7 neurons
     layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
+    layer_2 = tf.contrib.layers.batch_norm(inputs=layer_2, \
+                                           decay=batch_norm_decay, \
+                                           center=True,\
+                                           scale= True,\
+                                           epsilon= batch_norm_epsilon,\
+                                           is_training = batchnorm_istraining_io)
     layer_2 = tf.nn.relu(layer_2)
+
 
     # Hidden fully connected layer with 7 neurons
     layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
+    layer_3 = tf.contrib.layers.batch_norm(inputs=layer_3, \
+                                           decay=batch_norm_decay, \
+                                           center=True,\
+                                           scale= True,\
+                                           epsilon= batch_norm_epsilon,\
+                                           is_training = batchnorm_istraining_io)
     layer_3 = tf.nn.relu(layer_3)
 
     # Hidden fully connected layer with 4 neurons
     layer_4 = tf.add(tf.matmul(layer_3, weights['h4']), biases['b4'])
+    layer_4 = tf.contrib.layers.batch_norm(inputs=layer_4, \
+                                           decay=batch_norm_decay, \
+                                           center=True,\
+                                           scale= True,\
+                                           epsilon= batch_norm_epsilon,\
+                                           is_training = batchnorm_istraining_io)
     layer_4 = tf.nn.relu(layer_4)
 
     # Hidden fully connected layer with 4 neurons
     layer_5 = tf.add(tf.matmul(layer_4, weights['h5']), biases['b5'])
+    layer_5 = tf.contrib.layers.batch_norm(inputs=layer_5,\
+                                           decay=batch_norm_decay, \
+                                           center=True,\
+                                           scale= True,\
+                                           epsilon= batch_norm_epsilon,\
+                                           is_training = batchnorm_istraining_io)
     layer_5 = tf.nn.relu(layer_5)
 
     # Output fully connected layer with a neuron for each class
@@ -139,42 +177,40 @@ def neural_net(x):
     return out_layer
 
 # Construct model
-logits = neural_net(X)
+logits = neural_net(x=X,\
+                    batchnorm_istraining_io = batchnorm_istraining_io ,\
+                    batch_norm_epsilon      = batch_norm_epsilon, \
+                    batch_norm_decay        = batch_norm_decay)
+
 prediction = tf.nn.softmax(logits)
 
 # Define loss and optimizer
-cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
-#optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+cost        = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
+
+'''
+from Tensorflow API doc
+(https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm )
+Note: when training, the moving_mean and moving_variance need to be updated.
+By default the update ops are placed in tf.GraphKeys.UPDATE_OPS,
+so they need to be added as a dependency to the train_op'''
+update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+with tf.control_dependencies(update_ops):
+    optimizer   = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+
+    ## when you use AdamOptimizer, instead of SGD, the error rate immediately becomes near zero.
+    #optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+# ----------------------------------
 
 # Evaluate model
-correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+correct_pred    = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
+accuracy        = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 errRatebyTrainingSet     = np.zeros(training_epochs)
 errRatebyValidationSet   = np.zeros(training_epochs)
 
+
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
-
-# for visualization of vanishing gradient problem
-grad_wrt_weight_layer1_tensor = tf.gradients(cost,weights['h1'],\
-                                             name='grad_wrt_weight_layer1')
-grad_wrt_weight_layer2_tensor = tf.gradients(cost,weights['h2'],\
-                                             name='grad_wrt_weight_layer2')
-grad_wrt_weight_layer3_tensor = tf.gradients(cost,weights['h3'],\
-                                             name='grad_wrt_weight_layer3')
-grad_wrt_weight_layer4_tensor = tf.gradients(cost,weights['h4'],\
-                                             name='grad_wrt_weight_layer4')
-grad_wrt_weight_layer5_tensor = tf.gradients(cost,weights['h5'],\
-                                             name='grad_wrt_weight_layer5')
-
-grad_wrt_weight_layer1_iter = np.zeros([total_batch,1])
-grad_wrt_weight_layer2_iter = np.zeros([total_batch,1])
-grad_wrt_weight_layer3_iter = np.zeros([total_batch,1])
-grad_wrt_weight_layer4_iter = np.zeros([total_batch,1])
-grad_wrt_weight_layer5_iter = np.zeros([total_batch,1])
-
 
 # Start training ===============================================
 with tf.Session() as sess:
@@ -186,6 +222,7 @@ with tf.Session() as sess:
     for epoch in range(training_epochs):
         avg_cost = 0.
 
+        weight_array = list()
         for i in range(total_batch):
             data_start_index = i * batch_size
             data_end_index = (i + 1) * batch_size
@@ -195,51 +232,17 @@ with tf.Session() as sess:
 
             #----------------------------------------------
             # Run optimization op (backprop) and cost op (to get loss value)
-            # feedign training data
-            _, local_batch_cost = sess.run([optimizer,cost], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
-
-            if epoch == training_epochs - 1:
-                # print ('Gradient calculation to see gradient vanishing problem')
-                _, grad_wrt_weight_layer1 = sess.run([optimizer,grad_wrt_weight_layer1_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
-                _, grad_wrt_weight_layer2 = sess.run([optimizer,grad_wrt_weight_layer2_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
-                _, grad_wrt_weight_layer3 = sess.run([optimizer,grad_wrt_weight_layer3_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
-                _, grad_wrt_weight_layer4 = sess.run([optimizer,grad_wrt_weight_layer4_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
-                _, grad_wrt_weight_layer5 = sess.run([optimizer,grad_wrt_weight_layer5_tensor], feed_dict={X: batch_xs,
-                                                          Y: batch_ts})
-                grad_wrt_weight_layer1 = np.array(grad_wrt_weight_layer1)
-                grad_wrt_weight_layer2 = np.array(grad_wrt_weight_layer2)
-                grad_wrt_weight_layer3 = np.array(grad_wrt_weight_layer3)
-                grad_wrt_weight_layer4 = np.array(grad_wrt_weight_layer4)
-                grad_wrt_weight_layer5 = np.array(grad_wrt_weight_layer5)
-
-                grad_wrt_weight_layer1 = grad_wrt_weight_layer1.reshape(grad_wrt_weight_layer1.shape[1],
-                                                                    grad_wrt_weight_layer1.shape[2])
-                grad_wrt_weight_layer2 = grad_wrt_weight_layer2.reshape(grad_wrt_weight_layer2.shape[1],
-                                                                    grad_wrt_weight_layer2.shape[2])
-                grad_wrt_weight_layer3 = grad_wrt_weight_layer3.reshape(grad_wrt_weight_layer3.shape[1],
-                                                                    grad_wrt_weight_layer3.shape[2])
-                grad_wrt_weight_layer4 = grad_wrt_weight_layer4.reshape(grad_wrt_weight_layer4.shape[1],
-                                                                    grad_wrt_weight_layer4.shape[2])
-                grad_wrt_weight_layer5 = grad_wrt_weight_layer5.reshape(grad_wrt_weight_layer5.shape[1],
-                                                                    grad_wrt_weight_layer5.shape[2])
-
-                grad_wrt_weight_layer1_iter[i] = grad_wrt_weight_layer1.mean()
-                grad_wrt_weight_layer2_iter[i] = grad_wrt_weight_layer2.mean()
-                grad_wrt_weight_layer3_iter[i] = grad_wrt_weight_layer3.mean()
-                grad_wrt_weight_layer4_iter[i] = grad_wrt_weight_layer4.mean()
-                grad_wrt_weight_layer5_iter[i] = grad_wrt_weight_layer5.mean()
+            # feeding training data
+            _, local_batch_cost = sess.run([optimizer,cost], feed_dict={X: batch_xs,\
+                                                                        Y: batch_ts, \
+                                                                        batchnorm_istraining_io: True })
 
             # Compute average loss
             avg_cost += local_batch_cost / total_batch
 
             # print ("At %d-th batch in %d-epoch, avg_cost = %f" % (i,epoch,avg_cost) )
-
             # Display logs per epoch step
+
         if display_step == 0:
             continue
         elif (epoch + 1) % display_step == 0:
@@ -249,17 +252,25 @@ with tf.Session() as sess:
             batch_valid_xs = x_validation_data
             batch_valid_ys = t_validation_data
 
-            errRatebyTrainingSet[epoch] = 1.0 - accuracy.eval({X: batch_train_xs, \
-                                                          Y: batch_train_ys}, session=sess)
+            # for error rate evaluation, the dropout rate must be 1.0, batch_norm is under validation mode
+            errRatebyTrainingSet[epoch] = 1.0 - accuracy.eval(feed_dict={X: batch_train_xs, \
+                                                                         Y: batch_train_ys, \
+                                                                         batchnorm_istraining_io: False},\
+                                                              session=sess)
 
-            errRatebyValidationSet[epoch] = 1.0 - accuracy.eval({X: batch_valid_xs, \
-                                                            Y: batch_valid_ys}, session=sess)
+            errRatebyValidationSet[epoch] = 1.0 - accuracy.eval(feed_dict={X: batch_valid_xs, \
+                                                                           Y: batch_valid_ys, \
+                                                                           batchnorm_istraining_io: False},\
+                                                                session=sess)
 
             print("Training set Err rate: %s"   % errRatebyTrainingSet[epoch])
             print("Validation set Err rate: %s" % errRatebyValidationSet[epoch])
             print("--------------------------------------------")
 
     print("Optimization Finished!")
+
+    # Calculate accuracy for test images
+    ##-------------------------------------------
 
 # Training result visualization ===============================================
 
@@ -274,23 +285,14 @@ plt.title('Two Spiral data Example')
 plt.legend()
 
 
+
 hfig2 = plt.figure(2,figsize=(10,10))
-batch_index = np.array([elem for elem in range(total_batch)])
-plt.plot(batch_index,grad_wrt_weight_layer1_iter,label='layer1',color='b',marker='o')
-plt.plot(batch_index,grad_wrt_weight_layer4_iter,label='layer4',color='y',marker='o')
-plt.plot(batch_index,grad_wrt_weight_layer5_iter,label='layer5',color='r',marker='o')
-plt.legend()
-plt.title('Weight Gradient with ReLu over minibatch iter @ training epoch = %s' % training_epochs)
-plt.xlabel('minibatch iter')
-plt.ylabel('Weight Gradient')
-
-
-hfig3 = plt.figure(3,figsize=(10,10))
 epoch_index = np.array([elem for elem in range(training_epochs)])
 plt.plot(epoch_index,errRatebyTrainingSet,label='Training data',color='r',marker='o')
 plt.plot(epoch_index,errRatebyValidationSet,label='Validation data',color='b',marker='x')
 plt.legend()
-plt.title('Train/Valid Err')
+plt.title('Train/Valid Err with batch norm.' )
 plt.xlabel('Iteration epoch')
 plt.ylabel('error Rate')
+
 

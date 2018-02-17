@@ -79,7 +79,7 @@ display_step = 1
 n_hidden_1 = 7 # 1st layer number of neurons
 n_hidden_2 = 7 # 2nd layer number of neurons
 n_hidden_3 = 4 # 3rd layer number of neurons
-num_input = xsize   # two-dimensional input X = [x1 x2]
+num_input = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
 
 # tf Graph input
@@ -140,11 +140,12 @@ errRateValidation   = np.zeros(training_epochs)
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer
     sess.run(init)
+    print("--------------------------------------------")
 
     for epoch in range(training_epochs):
         avg_cost = 0.
@@ -191,6 +192,7 @@ with tf.Session() as sess:
     print("Optimization Finished!")
 
 
+# Training result visualization ===============================================
 
 hfig2 = plt.figure(2,figsize=(10,10))
 epoch_index = np.array([elem for elem in range(training_epochs)])
