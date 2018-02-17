@@ -62,22 +62,19 @@ t_training_data = t_data[0:training_size,:]
 x_validation_data = x_data[training_size:-1,:]
 t_validation_data = t_data[training_size:-1,:]
 
-# #data plot
-hfig1= plt.figure(1,figsize=[10,10])
-plt.scatter(data.xdata1.values[0:int(data.xdata1.size/2)],\
-            data.xdata2.values[0:int(data.xdata1.size/2)], \
-            color='b',label='class0')
-plt.scatter(data.xdata1.values[int(data.xdata1.size/2)+2:-1],\
-            data.xdata2.values[int(data.xdata1.size/2)+2:-1], \
-            color='r',label='class1')
-plt.title('Two Spiral data Example')
-plt.legend()
-
 
 # configure training parameters =====================================
-learning_rate = 0.00001
-training_epochs = 5
-batch_size = 100
+# To see mitigation of vanishing gradient problem
+# learning_rate = 0.00001
+# training_epochs = 5
+# batch_size = 100
+# display_step = 1
+# total_batch = int(training_size / batch_size)
+
+## for convergence
+learning_rate = 5E-3
+training_epochs = 5000
+batch_size = 500
 display_step = 1
 total_batch = int(training_size / batch_size)
 
@@ -90,7 +87,7 @@ n_hidden_4 = 4 # 4rd layer number of neurons
 n_hidden_5 = 4 # 5rd layer number of neurons
 
 
-num_input = xsize   # two-dimensional input X = [x1 x2]
+num_input = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
 
 # tf Graph input
@@ -154,8 +151,8 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minim
 correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
-errRateTraining     = np.zeros(training_epochs)
-errRateValidation   = np.zeros(training_epochs)
+errRatebyTrainingSet     = np.zeros(training_epochs)
+errRatebyValidationSet   = np.zeros(training_epochs)
 
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
@@ -179,11 +176,12 @@ grad_wrt_weight_layer4_iter = np.zeros([total_batch,1])
 grad_wrt_weight_layer5_iter = np.zeros([total_batch,1])
 
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer
     sess.run(init)
+    print("--------------------------------------------")
 
     for epoch in range(training_epochs):
         avg_cost = 0.
@@ -251,18 +249,29 @@ with tf.Session() as sess:
             batch_valid_xs = x_validation_data
             batch_valid_ys = t_validation_data
 
-            errRateTraining[epoch] = 1.0 - accuracy.eval({X: batch_train_xs, \
+            errRatebyTrainingSet[epoch] = 1.0 - accuracy.eval({X: batch_train_xs, \
                                                           Y: batch_train_ys}, session=sess)
 
-            errRateValidation[epoch] = 1.0 - accuracy.eval({X: batch_valid_xs, \
+            errRatebyValidationSet[epoch] = 1.0 - accuracy.eval({X: batch_valid_xs, \
                                                             Y: batch_valid_ys}, session=sess)
 
-            print("Training set Err rate: %s"   % errRateTraining[epoch])
-            print("Validation set Err rate: %s" % errRateValidation[epoch])
+            print("Training set Err rate: %s"   % errRatebyTrainingSet[epoch])
+            print("Validation set Err rate: %s" % errRatebyValidationSet[epoch])
             print("--------------------------------------------")
 
     print("Optimization Finished!")
 
+# Training result visualization ===============================================
+
+hfig1= plt.figure(1,figsize=[10,10])
+plt.scatter(data.xdata1.values[0:int(data.xdata1.size/2)],\
+            data.xdata2.values[0:int(data.xdata1.size/2)], \
+            color='b',label='class0')
+plt.scatter(data.xdata1.values[int(data.xdata1.size/2)+2:-1],\
+            data.xdata2.values[int(data.xdata1.size/2)+2:-1], \
+            color='r',label='class1')
+plt.title('Two Spiral data Example')
+plt.legend()
 
 
 hfig2 = plt.figure(2,figsize=(10,10))
@@ -271,8 +280,17 @@ plt.plot(batch_index,grad_wrt_weight_layer1_iter,label='layer1',color='b',marker
 plt.plot(batch_index,grad_wrt_weight_layer4_iter,label='layer4',color='y',marker='o')
 plt.plot(batch_index,grad_wrt_weight_layer5_iter,label='layer5',color='r',marker='o')
 plt.legend()
-plt.title('Weight Gradient over minibatch iter @ training epoch = %s' % training_epochs)
+plt.title('Weight Gradient with ReLu over minibatch iter @ training epoch = %s' % training_epochs)
 plt.xlabel('minibatch iter')
 plt.ylabel('Weight Gradient')
 
+
+hfig3 = plt.figure(3,figsize=(10,10))
+epoch_index = np.array([elem for elem in range(training_epochs)])
+plt.plot(epoch_index,errRatebyTrainingSet,label='Training data',color='r',marker='o')
+plt.plot(epoch_index,errRatebyValidationSet,label='Validation data',color='b',marker='x')
+plt.legend()
+plt.title('Train/Valid Err')
+plt.xlabel('Iteration epoch')
+plt.ylabel('error Rate')
 

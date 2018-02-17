@@ -70,11 +70,12 @@ plt.legend()
 
 
 # configure training parameters =====================================
-learning_rate = 0.00001
+learning_rate = 1E-5
 training_epochs = 5
 batch_size = 100
 display_step = 1
 total_batch = int(training_size / batch_size)
+
 
 # computational TF graph construction ================================
 # Network Parameters
@@ -85,8 +86,10 @@ n_hidden_4 = 4 # 4rd layer number of neurons
 n_hidden_5 = 4 # 5rd layer number of neurons
 
 
-num_input = xsize   # two-dimensional input X = [x1 x2]
+num_input = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
+
+#-------------------------------
 
 # tf Graph input
 X = tf.placeholder(tf.float32, [None, num_input])
@@ -174,11 +177,12 @@ grad_wrt_weight_layer4_iter = np.zeros([total_batch,1])
 grad_wrt_weight_layer5_iter = np.zeros([total_batch,1])
 
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer
     sess.run(init)
+    print("--------------------------------------------")
 
     for epoch in range(training_epochs):
         avg_cost = 0.
@@ -258,6 +262,7 @@ with tf.Session() as sess:
 
     print("Optimization Finished!")
 
+# Training result visualization ===============================================
 
 hfig2 = plt.figure(2,figsize=(10,10))
 batch_index = np.array([elem for elem in range(total_batch)])

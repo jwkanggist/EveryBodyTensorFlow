@@ -6,10 +6,18 @@
 
     To check Gradient Vanishing problem in
     A Multi-Hidden Layers Fully Connected Neural Network.
+    This script aim to see how the "batch normalization"
+    accelerate the training of
+    A Multi-Hidden Layers Fully Connected Neural Network.
+
+    Applying "batch normalization" to the lab10
 
     This example data set is using two class spiral data
 
-    ref: https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm
+    ref1:
+    https://www.tensorflow.org/api_docs/python/tf/contrib/layers/batch_norm
+    ref2:
+    http://ruishu.io/2016/12/27/batchnorm/
 
     written by Jaewook Kang @ Jan 2018
 #------------------------------------------------------------
@@ -68,7 +76,7 @@ display_step = 1
 total_batch = int(training_size / batch_size)
 
 # batch norm config
-batch_norm_epsilon = 1e-5
+batch_norm_epsilon = 1E-5
 batch_norm_decay = 0.99
 
 
@@ -81,15 +89,14 @@ n_hidden_4 = 4 # 4rd layer number of neurons
 n_hidden_5 = 4 # 5rd layer number of neurons
 
 
-num_input = xsize   # two-dimensional input X = [x1 x2]
+num_input   = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
+#-------------------------------
+
 
 # tf Graph input
 X           = tf.placeholder(tf.float32, [None, num_input],     name = 'x')
 Y           = tf.placeholder(tf.float32, [None, num_classes],   name = 'y')
-
-# droprate must be given by placeholder
-# since the network in validation do not require dropout nodes in layers.
 batchnorm_istraining_io = tf.placeholder(tf.bool,name='bn_phase')
 
 # Store layers weight & bias
@@ -192,10 +199,11 @@ with tf.control_dependencies(update_ops):
 
     ## when you use AdamOptimizer, instead of SGD, the error rate immediately becomes near zero.
     #optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+# ----------------------------------
 
 # Evaluate model
-correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
+correct_pred    = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))
+accuracy        = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
 errRatebyTrainingSet     = np.zeros(training_epochs)
 errRatebyValidationSet   = np.zeros(training_epochs)
@@ -204,11 +212,12 @@ errRatebyValidationSet   = np.zeros(training_epochs)
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer
     sess.run(init)
+    print("--------------------------------------------")
 
     for epoch in range(training_epochs):
         avg_cost = 0.
@@ -262,7 +271,9 @@ with tf.Session() as sess:
 
     # Calculate accuracy for test images
     ##-------------------------------------------
-## data plot
+
+# Training result visualization ===============================================
+
 hfig1= plt.figure(1,figsize=[10,10])
 plt.scatter(data.xdata1.values[0:int(data.xdata1.size/2)],\
             data.xdata2.values[0:int(data.xdata1.size/2)], \
@@ -280,7 +291,7 @@ epoch_index = np.array([elem for elem in range(training_epochs)])
 plt.plot(epoch_index,errRatebyTrainingSet,label='Training data',color='r',marker='o')
 plt.plot(epoch_index,errRatebyValidationSet,label='Validation data',color='b',marker='x')
 plt.legend()
-plt.title('Dropout = (%s), Train/Valid Err' % dropoutrate_in_training)
+plt.title('Train/Valid Err with batch norm.' )
 plt.xlabel('Iteration epoch')
 plt.ylabel('error Rate')
 

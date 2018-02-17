@@ -77,7 +77,7 @@ display_step = 1
 # Network Parameters
 n_hidden_1 = 5 # 1st layer number of neurons
 n_hidden_2 = 5 # 2nd layer number of neurons
-num_input = xsize   # two-dimensional input X = [x1 x2]
+num_input = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
 
 # tf Graph input
@@ -130,7 +130,7 @@ errRateValidation   = np.zeros(training_epochs)
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer
@@ -184,7 +184,7 @@ with tf.Session() as sess:
 
     print("Optimization Finished!")
 
-
+# Training result visualization ===============================================
 hfig2 = plt.figure(2,figsize=(10,10))
 epoch_index = np.array([elem for elem in range(training_epochs)])
 plt.plot(epoch_index,errRateTraining,label='Training data',color='r',marker='o')

@@ -87,7 +87,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer

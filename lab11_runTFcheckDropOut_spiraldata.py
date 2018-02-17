@@ -8,8 +8,9 @@
     mitigate Gradient Vanishing problem in
     A Multi-Hidden Layers Fully Connected Neural Network.
 
+    Applying "batch normalization" to the lab10
+
     This example data set is using two class spiral data.
-    Applying the dropout to the lab7 example.
 
     written by Jaewook Kang @ Jan 2018
 #------------------------------------------------------------
@@ -62,10 +63,10 @@ t_validation_data = t_data[training_size:-1,:]
 
 
 # configure training parameters =====================================
-learning_rate = 0.005
+learning_rate = 5E-3
 training_epochs = 5000
 batch_size = 500
-display_step = 100
+display_step = 1
 total_batch = int(training_size / batch_size)
 
 # dropout_rate = 1 --> no dropout
@@ -81,8 +82,9 @@ n_hidden_4 = 4 # 4rd layer number of neurons
 n_hidden_5 = 4 # 5rd layer number of neurons
 
 
-num_input = xsize   # two-dimensional input X = [x1 x2]
+num_input = xsize   # two-dimensional input X = [1x2]
 num_classes = ysize # 2 class
+#-------------------------------
 
 # tf Graph input
 X           = tf.placeholder(tf.float32, [None, num_input])
@@ -186,11 +188,12 @@ grad_wrt_weight_layer5_iter = np.zeros([total_batch,1])
 init = tf.global_variables_initializer()
 
 
-# Start training
+# Start training ===============================================
 with tf.Session() as sess:
 
     # Run the initializer
     sess.run(init)
+    print("--------------------------------------------")
 
     for epoch in range(training_epochs):
         avg_cost = 0.
@@ -293,7 +296,10 @@ with tf.Session() as sess:
 
     # Calculate accuracy for test images
     ##-------------------------------------------
-#data plot
+
+
+# Training result visualization ===============================================
+
 hfig1= plt.figure(1,figsize=[10,10])
 plt.scatter(data.xdata1.values[0:int(data.xdata1.size/2)],\
             data.xdata2.values[0:int(data.xdata1.size/2)], \
