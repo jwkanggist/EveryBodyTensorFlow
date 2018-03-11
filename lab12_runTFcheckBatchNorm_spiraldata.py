@@ -222,7 +222,6 @@ with tf.Session() as sess:
     for epoch in range(training_epochs):
         avg_cost = 0.
 
-        weight_array = list()
         for i in range(total_batch):
             data_start_index = i * batch_size
             data_end_index = (i + 1) * batch_size
