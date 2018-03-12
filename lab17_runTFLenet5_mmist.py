@@ -93,7 +93,7 @@ class TrainConfig(object):
 
         self.learning_rate      = 0.01
         self.is_learning_rate_decay = True
-        self.learning_rate_decay_rate =0.97
+        self.learning_rate_decay_rate =0.99
         self.opt_type='Adam'
 
         self.training_epochs    = 100
@@ -109,7 +109,7 @@ class TrainConfig(object):
         self.FLAGS              = None
 
         # FC layer config
-        self.dropout_keeprate   = 0.7
+        self.dropout_keeprate   = 0.8
         self.fc_layer_l2loss_epsilon = 5E-5
 
         self.tf_data_type       = tf.float32
@@ -244,7 +244,7 @@ validation_labels = train_labels[:VALIDATIONSET_SIZE]
 train_data = train_data[VALIDATIONSET_SIZE:, ...]
 train_labels = train_labels[VALIDATIONSET_SIZE:]
 
-# data set should be zipped here
+# [data set should be zipped here]
 
 
 # network model construction ======================
@@ -260,17 +260,17 @@ with lenet5_tf_graph.as_default():
 
     dropout_keeprate_node = tf.placeholder(dtype=trainconfig_worker.tf_data_type)
 
-    lenet5_model_worker = Lenet5(dropout_keeprate_for_fc=dropout_keeprate_node,
+    lenet5_model_builder = Lenet5(dropout_keeprate_for_fc=dropout_keeprate_node,
                                  dtype=trainconfig_worker.tf_data_type)
-    lenet5_model_worker.get_model(input_nodes=data_node)
+    lenet5_model_builder.get_tf_model(input_nodes=data_node)
 
     with tf.name_scope("cost_func"):
-        lenet5_model_worker.get_tf_cost_fuction(train_labels_node = labels_node,
+        lenet5_model_builder.get_tf_cost_fuction(train_labels_node = labels_node,
                                             is_l2_loss=True,
                                             epsilon=trainconfig_worker.fc_layer_l2loss_epsilon)
 
     with tf.name_scope('optimizer'):
-        lenet5_model_worker.get_tf_optimizer(opt_type=trainconfig_worker.opt_type,
+        lenet5_model_builder.get_tf_optimizer(opt_type=trainconfig_worker.opt_type,
                                          learning_rate=trainconfig_worker.learning_rate,
                                          total_batch_size=TRAININGSET_SIZE,
                                          minibatch_size=trainconfig_worker.minibatch_size,
@@ -279,7 +279,7 @@ with lenet5_tf_graph.as_default():
 
 
     with tf.name_scope('model_out'):
-        model_pred = tf.nn.softmax(lenet5_model_worker.out_layer_out)
+        model_pred = tf.nn.softmax(lenet5_model_builder.out_layer_out)
 
     with tf.name_scope('eval_performance'):
         error             = tf.equal(tf.argmax(model_pred,1),labels_node)
@@ -294,7 +294,7 @@ with lenet5_tf_graph.as_default():
 
 # Summary for Tensorboard visualization
 #tb_summary_accuracy = tf.summary.scalar('accuracy', tf_pred_accuracy)
-#tb_summary_cost     = tf.summary.scalar('loss', lenet5_model_worker.tf_cost)
+#tb_summary_cost     = tf.summary.scalar('loss', lenet5_model_builder.tf_cost)
 
 
 # network model traning ==============================
@@ -327,7 +327,7 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
             minibatch_data  = train_data  [data_start_index:data_end_index, ...]
             minibatch_label = train_labels[data_start_index:data_end_index]
 
-            _, minibatch_cost = sess.run([lenet5_model_worker.tf_optimizer,lenet5_model_worker.tf_cost],
+            _, minibatch_cost = sess.run([lenet5_model_builder.tf_optimizer,lenet5_model_builder.tf_cost],
                                          feed_dict={data_node:      minibatch_data,
                                                     labels_node:     minibatch_label,
                                                     dropout_keeprate_node: trainconfig_worker.dropout_keeprate})

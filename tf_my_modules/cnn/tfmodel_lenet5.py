@@ -19,6 +19,7 @@ from cnn_layer_modules import FcLayer
 
 
 
+
 class Lenet5(object):
 
     def __init__(self,dropout_keeprate_for_fc,dtype=tf.float32):
@@ -96,7 +97,12 @@ class Lenet5(object):
         self.tf_optimizer   = None
 
 
-    def get_model(self,input_nodes):
+
+
+
+
+
+    def get_tf_model(self,input_nodes):
 
         print('====================================')
         print('[Lenet5] Stacking CNN layers!')
@@ -125,6 +131,8 @@ class Lenet5(object):
 
 
 
+
+
     def get_tf_cost_fuction(self,train_labels_node,is_l2_loss=False,epsilon=0.0):
         # design cost function======================================
         # in this code the label \in [0, num_label-1]
@@ -138,10 +146,11 @@ class Lenet5(object):
                                tf.nn.l2_loss(self.f6_layer.layer_bias)   +
                                tf.nn.l2_loss(self.out_layer.layer_weight)+
                                tf.nn.l2_loss(self.out_layer.layer_bias))
-
             self.tf_cost += epsilon* fc_regularizers
 
         return self.tf_cost
+
+
 
 
 

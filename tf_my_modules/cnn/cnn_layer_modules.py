@@ -121,6 +121,7 @@ class Conv2dLayer(object):
 
 
 
+
     def get_conv2dlayer_tfvariables(self):
         with tf.variable_scope(name_or_scope=self.variable_scope_name):
             self.filter_weight  = tf.get_variable(name= "weights",
@@ -202,6 +203,10 @@ class Conv2dLayer(object):
 
 
 
+
+
+
+
 class FcLayer(object):
 
     def __init__(self,layer_index,
@@ -259,8 +264,6 @@ class FcLayer(object):
 
 
 
-
-
     def activation(self):
 
         if self.activation_type == 'relu':
@@ -285,8 +288,6 @@ class FcLayer(object):
             print('[%s] Activation function named %s is not supported' % (self.variable_scope_name,self.activation_type))
 
         return self.layer_out
-
-
 
 
 
