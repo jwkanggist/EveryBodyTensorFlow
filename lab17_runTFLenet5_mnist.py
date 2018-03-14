@@ -24,8 +24,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
-import gzip
+
 import sys
 import time
 from datetime import datetime
@@ -37,53 +36,11 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-from six.moves import urllib
-from six.moves import xrange  # pylint: disable=redefined-builtin
-
 sys.path.insert(0, getcwd()+'/tf_my_modules/cnn')
 from tfmodel_lenet5 import Lenet5
+from mnist_data_loader import DataFilename
+from mnist_data_loader import MnistLoader
 
-
-
-'''
-The MNIST database of handwritten digits, available from the LeCun's webpage,
-has a training set of 60,000 examples, and a test set of 10,000 examples.
-The digits have been size-normalized and centered in a fixed-size image, 28X28.
-'''
-SOURCE_URL      = 'http://yann.lecun.com/exdb/mnist/'
-WORK_DIRECTORY  = getcwd()+'/data/mnist'
-
-# The size of mnist image
-# The image size of the first convolutional layer in LeNet5 is 28 X 28
-IMAGE_SIZE      = 28
-# gray scsle image
-NUM_CHANNELS    = 1
-PIXEL_DEPTH     = 255
-# 0 to 9 char images
-NUM_LABELS      = 10
-
-
-# data size config
-# TRAININGSET_SIZE     = 50000
-# VALIDATIONSET_SIZE   = 10000
-# TESTSET_SIZE         = 10000
-
-TRAININGSET_SIZE     = 5000
-VALIDATIONSET_SIZE   = 1000
-TESTSET_SIZE         = 1000
-
-# data filename =====================================================
-'''
-    we splits the LeCun's training data to training and validation data.
-    we use the LeCun's test data as it is.
-'''
-class DataFilename(object):
-
-    def __init__(self):
-        self.trainingimages_filename     = 'train-images-idx3-ubyte.gz'
-        self.traininglabels_filename     = 'train-labels-idx1-ubyte.gz'
-        self.testimages_filename         = 't10k-images-idx3-ubyte.gz'
-        self.testlabels_filename         = 't10k-labels-idx1-ubyte.gz'
 
 
 
@@ -121,121 +78,38 @@ class TrainConfig(object):
         self.logdir = "{}/run-{}/".format(root_logdir, now)
 
 
+# data size config
+# TRAININGSET_SIZE     = 50000
+# VALIDATIONSET_SIZE   = 10000
+# TESTSET_SIZE         = 10000
 
-    # function module for data set loading  ============================
-def download_mnist_dataset(filename):
-    '''
-        check whether we have the mnist dataset in the given WORK_DIRECTORY,
-        otherwise, download the data from YANN's website,
-    '''
-
-    if not tf.gfile.Exists(WORK_DIRECTORY):
-        tf.gfile.MakeDirs(WORK_DIRECTORY)
-        print (" %s is not exist" % WORK_DIRECTORY)
-
-    filepath = os.path.join(WORK_DIRECTORY,filename)
-
-    print('filepath = %s' % filepath)
-
-    if not tf.gfile.Exists(filepath):
-        filepath, _ = urllib.request.urlretrieve(SOURCE_URL+ filename, filepath)
-        with tf.gfile.GFile(filepath) as f:
-            size = f.size()
-            print ('Successfully downloaded',filename,size,'bytes.')
-
-        print('[download_mnist_dataset] filepath = %s' % filepath)
-    return filepath
-
-
-
-
-def extract_data(filename, num_images):
-    '''
-    Extract the image into 4D tensor [image index, height,weight, channels]
-    values are rescaled from [ 0, 255] down to [-0.5, 0.5]
-
-    LeCun provides training set in a type of BMP format (No compression)
-    One pixel value is from 0 to 255
-
-    For representation, this needs 1byte = 8 bits ==> 2^8 =256
-
-    TRAINING SET IMAGE FILE (train-images-idx3-ubyte):
-    [offset] [type]          [value]          [description]
-    0000     32 bit integer  0x00000803(2051) magic number
-    0004     32 bit integer  60000            number of images
-    0008     32 bit integer  28               number of rows
-    0012     32 bit integer  28               number of columns
-    0016     unsigned byte   ??               pixel
-    0017     unsigned byte   ??               pixel
-    ........
-    xxxx     unsigned byte   ??               pixel
-    '''
-    print ('[extract_data] Extracting gzipped data from %s' % filename)
-
-    with gzip.open(filename) as bytestream:
-        # threw out the header which has 16 bytes
-        bytestream.read(16)
-
-        # extract image data
-        buf     = bytestream.read(IMAGE_SIZE * IMAGE_SIZE * num_images * NUM_CHANNELS)
-
-        # type cast from uint8 to np.float32 to work in tensorflow framework
-        data    = np.frombuffer(buffer=buf,
-                                dtype =np.uint8).astype(np.float32)
-
-        # rescaling data set over [-0.5 0.5]
-        data    = (data - (PIXEL_DEPTH / 2.0) ) / PIXEL_DEPTH
-
-        # reshaping to 4D tensors
-        data    = data.reshape(num_images, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS)
-        return data
-
-
-
-
-def extract_label(filename, num_images):
-    '''
-        Extract the lable into vector of int64 label IDs
-    '''
-    print ('[extract_label] Extracting gzipped data from %s' % filename)
-
-    with gzip.open(filename=filename) as bytestream:
-        bytestream.read(8)
-        buf = bytestream.read(1 * num_images)
-        # type cast from uint8 to np.int64 to work in tensorflow framework
-        labels = np.frombuffer(buffer=buf,
-                               dtype=np.uint8).astype(np.int64)
-    print('[extract_label] label= %s'% labels)
-    return labels
-
-
-
-
-
-
+TRAININGSET_SIZE     = 5000
+VALIDATIONSET_SIZE   = 1000
+TESTSET_SIZE         = 1000
 
 # worker instance declaration
 datafilename_worker = DataFilename()
-trainconfig_worker = TrainConfig()
+mnist_data_loader   = MnistLoader()
+trainconfig_worker  = TrainConfig()
 
 
 # Download the data
-train_data_filepathname = download_mnist_dataset(filename=datafilename_worker.trainingimages_filename)
-train_labels_filepathname = download_mnist_dataset(filename=datafilename_worker.traininglabels_filename)
+train_data_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.trainingimages_filename)
+train_labels_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.traininglabels_filename)
 
-test_data_filepathname = download_mnist_dataset(filename=datafilename_worker.testimages_filename)
-test_labels_filepathname = download_mnist_dataset(filename=datafilename_worker.testlabels_filename)
+test_data_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testimages_filename)
+test_labels_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testlabels_filename)
 
 # extract data from gzip files into numpy arrays
-train_data = extract_data(filename=train_data_filepathname,
-                          num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
-train_labels = extract_label(filename=train_labels_filepathname,
-                            num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
+train_data = mnist_data_loader.extract_data(filename=train_data_filepathname,
+                                            num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
+train_labels = mnist_data_loader.extract_label(filename=train_labels_filepathname,
+                                                num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
 
-test_data = extract_data(filename=test_data_filepathname,
-                         num_images=TESTSET_SIZE)
-test_labels = extract_label(filename=test_labels_filepathname,
-                           num_images=TESTSET_SIZE)
+test_data = mnist_data_loader.extract_data(filename=test_data_filepathname,
+                                            num_images=TESTSET_SIZE)
+test_labels = mnist_data_loader.extract_label(filename=test_labels_filepathname,
+                                                num_images=TESTSET_SIZE)
 
 # prepare validation by spliting training set
 validation_data = train_data[:VALIDATIONSET_SIZE, ...]
@@ -254,7 +128,9 @@ lenet5_tf_graph = tf.Graph()
 with lenet5_tf_graph.as_default():
     # training nodes (data,label) placeholders
     data_node = tf.placeholder(dtype=trainconfig_worker.tf_data_type,
-                               shape=[None, IMAGE_SIZE, IMAGE_SIZE, NUM_CHANNELS])
+                               shape=[None, mnist_data_loader.IMAGE_SIZE,
+                                            mnist_data_loader.IMAGE_SIZE,
+                                            mnist_data_loader.NUM_CHANNELS])
     labels_node = tf.placeholder(dtype=tf.int64,
                                  shape=[None, ])
 
@@ -297,7 +173,7 @@ with lenet5_tf_graph.as_default():
 #tb_summary_cost     = tf.summary.scalar('loss', lenet5_model_builder.tf_cost)
 
 
-# network model traning ==============================
+# network model training ==============================
 
 train_error_rate        = np.zeros(shape=np.ceil(trainconfig_worker.training_epochs/trainconfig_worker.display_step).astype(np.int16),
                                    dtype=np.float32)

@@ -1,39 +1,50 @@
-# Everybody Tensorflow 
-This repository provides tutorial python scripts used in the EverybodyTensorlfow lecture by Jaewook Kang.
+Readme for Everybody Tensorflow  
+==================================
+- Final update: 2018 Mar 
 - All right reserved @ Jaewook Kang 2017-2018
 
-# Update information
-- Final update: 2018 2 19
 
-# Dependency 
+## About
+This repository provides tutorial python scripts used in the EverybodyTensorlfow lecture by Jaewook Kang.
+
+
+### Compiler/Interface Dependencies
 - Tensorflow >=1.4
 - Python2 <= 2.7.12
-- Python3 <= 
-
-# Installation 
-
+- Python3 <= 3.6.0
 
 
 ## Components
-1.Including tensorflow codes for basic machine learning algorithms
+Including tensorflow codes for basic machine learning algorithms
 for educational purpose.
 
-- lab1_randomwork.py              : For basic python numpy/scipy use
-- lab2_runHelloTensorflow.py      : That's start of Tensorflow
-- lab3_runTFLineFitting.py        : For line fitting  by linear regression
-- lab4_runTFCurveFitting.py       : For curve fitting  by linear regression
-- lab5_runTFLogisticReg.py        : For classifier learning by logistic regression
-- lab6_runTFMultiANN_clusterincluster.py : For classifier learning by multilayer neural networks
-- lab6_runTFMultiANN_spiraldata.py : For classifier learning by multilayer neural networks
-- lab6_runTFMultiANN_MNIST.py      : For classifier learning by multilayer neural networks
-- extra    : some python codes are included to learn basic operation of Tensorflow
+- lab1_randomwork.py                        : For basic python numpy/scipy use
+- lab2_runHelloTensorflow.py                : That's start of Tensorflow
+- lab3_runTFLineFitting.py                  : For line fitting  by linear regression
+- lab4_runTFCurveFitting.py                 : For curve fitting  by linear regression
+- lab5_runTFLogisticReg.py                  : For classifier learning by logistic regression
+- lab6_runTFMultiANN_clusterincluster.py    : For classifier learning by multilayer neural networks
+- lab6_runTFMultiANN_spiraldata.py          : For classifier learning by multilayer neural networks
+- lab6_runTFMultiANN_MNIST.py               : For classifier learning by multilayer neural networks
+- lab7_runTFcheckGradientVanishing_spiraldata.py: 
+~~- lab8                                    : TBU for Restricted Bolzmann Machine~~
+~~- lab9                                    : TBU for Deep Belief Network with unsupervised pre-training~~
+- lab10_runTFcheckReLu_spiraldata.py        : To see how ReLu activation mitigate the Vanishing gradient problem
+- lab11_runTFcheckDropOut_sprialdata.py     : To see how Dropout works with neural networks
+- lab12_runTFcheckBatchNorm_spiraldata.py   : To see how Batch normalization tech accelerate training of neural networks
+~~- lab13                                   : TBU for Adam optimizer~~ 
+~~- lab14                                   : TBU for Deep Belief Network with Batch Normalization + Relu activation~~
+- lab15_TFCnnFilter.py                      : To understand how CNN filtering works 
+- lab16_TFCnnPooling.py                     : To understand how CNN pooling works
+- lab17_runTFLenet5_mnist.py                : To understance how entire training process of CNN works
 
+### TF Modules
+- CNN modules
+~~- RBM modules~~
 
-# Releted Lecture Material (All Korean)
-- Tensorflow fundamental (KIT 2017 Sep)
-[link] (https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU)
-
-- A Story From ANN to CNN (GIST 2018 Jan.)
+# Releted Lecture Materials (All Korean)
+- [Tensorflow fundamental](https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU): KIT 2017 Sep
+- [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/1Q1GXw_7rwZhxmMTCbJDLaQrkn0l-6k_M) : GIST 2018 Jan
 
 
 # Feedback 
