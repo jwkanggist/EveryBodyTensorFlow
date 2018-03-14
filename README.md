@@ -25,35 +25,22 @@ This repository provides tutorial python scripts used in the EverybodyTensorlfow
 |-- /tf_my_modules
 ```
 
+### Data
+Including toy data sets for Tensorflow labs
+- Two-dimensional cluster in cluster data
+- Two-dimensional spirals data
+
 ### Labs
-Including tensorflow codes for basic machine learning algorithms
+Including Tensorflow codes for basic machine learning algorithms
 for educational purpose.
 
-- lab1_randomwork.py                      
-- lab2_runHelloTensorflow.py                
-- lab3_runTFLineFitting.py                
-- lab4_runTFCurveFitting.py               
-- lab5_runTFLogisticReg.py                  
-- lab6_runTFMultiANN_clusterincluster.py   
-- lab6_runTFMultiANN_spiraldata.py         
-- lab6_runTFMultiANN_MNIST.py            
-- lab7_runTFcheckGradientVanishing_spiraldata.py 
-- ~~lab8 (TBU)~~
-- ~~lab9 (TBU)~~
-- lab10_runTFcheckReLu_spiraldata.py        
-- lab11_runTFcheckDropOut_sprialdata.py     
-- lab12_runTFcheckBatchNorm_spiraldata.py   
-- ~~lab13 (TBU)~~ 
-- ~~lab14 (TBU)~~
-- lab15_TFCnnFilter.py                     
-- lab16_TFCnnPooling.py                    
-- lab17_runTFLenet5_mnist.py               
+
+### TF BASIC scripts
+Example scripts to testify basic functions of Tensorflow.               
 
 ### TF MY Modules
+Including fundamental tensorflow module for Tensorflow model developments.
 - CNN modules
-    - cnn_layer_modules.py
-    - mnist_data_loader.py
-    - tfmodel_lenet5.py
 - ~~RBM modules~~
 
 # Releted Lecture Materials (All Korean)
