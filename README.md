@@ -15,32 +15,46 @@ This repository provides tutorial python scripts used in the EverybodyTensorlfow
 
 
 ## Components
+```
+/
+|
+|-- /data
+|-- /pb_and_ckpt
+|-- /python_basic
+|-- /tf_basic
+|-- /tf_my_modules
+```
+
+### Labs
 Including tensorflow codes for basic machine learning algorithms
 for educational purpose.
 
-- lab1_randomwork.py                        : For basic python numpy/scipy use
-- lab2_runHelloTensorflow.py                : That's start of Tensorflow
-- lab3_runTFLineFitting.py                  : For line fitting  by linear regression
-- lab4_runTFCurveFitting.py                 : For curve fitting  by linear regression
-- lab5_runTFLogisticReg.py                  : For classifier learning by logistic regression
-- lab6_runTFMultiANN_clusterincluster.py    : For classifier learning by multilayer neural networks
-- lab6_runTFMultiANN_spiraldata.py          : For classifier learning by multilayer neural networks
-- lab6_runTFMultiANN_MNIST.py               : For classifier learning by multilayer neural networks
-- lab7_runTFcheckGradientVanishing_spiraldata.py: 
-~~- lab8                                    : TBU for Restricted Bolzmann Machine~~
-~~- lab9                                    : TBU for Deep Belief Network with unsupervised pre-training~~
-- lab10_runTFcheckReLu_spiraldata.py        : To see how ReLu activation mitigate the Vanishing gradient problem
-- lab11_runTFcheckDropOut_sprialdata.py     : To see how Dropout works with neural networks
-- lab12_runTFcheckBatchNorm_spiraldata.py   : To see how Batch normalization tech accelerate training of neural networks
-~~- lab13                                   : TBU for Adam optimizer~~ 
-~~- lab14                                   : TBU for Deep Belief Network with Batch Normalization + Relu activation~~
-- lab15_TFCnnFilter.py                      : To understand how CNN filtering works 
-- lab16_TFCnnPooling.py                     : To understand how CNN pooling works
-- lab17_runTFLenet5_mnist.py                : To understance how entire training process of CNN works
+- lab1_randomwork.py                      
+- lab2_runHelloTensorflow.py                
+- lab3_runTFLineFitting.py                
+- lab4_runTFCurveFitting.py               
+- lab5_runTFLogisticReg.py                  
+- lab6_runTFMultiANN_clusterincluster.py   
+- lab6_runTFMultiANN_spiraldata.py         
+- lab6_runTFMultiANN_MNIST.py            
+- lab7_runTFcheckGradientVanishing_spiraldata.py 
+- ~~lab8 (TBU)~~
+- ~~lab9 (TBU)~~
+- lab10_runTFcheckReLu_spiraldata.py        
+- lab11_runTFcheckDropOut_sprialdata.py     
+- lab12_runTFcheckBatchNorm_spiraldata.py   
+- ~~lab13 (TBU)~~ 
+- ~~lab14 (TBU)~~
+- lab15_TFCnnFilter.py                     
+- lab16_TFCnnPooling.py                    
+- lab17_runTFLenet5_mnist.py               
 
-### TF Modules
+### TF MY Modules
 - CNN modules
-~~- RBM modules~~
+    - cnn_layer_modules.py
+    - mnist_data_loader.py
+    - tfmodel_lenet5.py
+- ~~RBM modules~~
 
 # Releted Lecture Materials (All Korean)
 - [Tensorflow fundamental](https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU): KIT 2017 Sep
