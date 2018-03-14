@@ -40,7 +40,7 @@ Example scripts to testify basic functions of Tensorflow.
 
 ### TF MY Modules
 Including fundamental tensorflow module for Tensorflow model developments.
-- CNN modules
+- [CNN modules](https://github.com/jwkanggist/EveryBodyTensorFlow/tree/master/tf_my_modules/cnn)
 - ~~RBM modules~~
 
 # Releted Lecture Materials (All Korean)
