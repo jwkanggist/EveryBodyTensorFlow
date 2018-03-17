@@ -1,0 +1,3 @@
+[submodule "tf_my_modules/cnn"]
+	path = tf_my_modules/cnn
+	url = https://github.com/jwkanggist/tf-cnn-model
