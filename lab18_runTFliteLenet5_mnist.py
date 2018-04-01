@@ -1,9 +1,9 @@
 #-*- coding: utf-8 -*-
 #! /usr/bin/env python
 '''
-    filename: lab17_runTFLenet5_mnist.py
+    filename: lab18_runTFliteLenet5_mnist.py
 
-    description: simple end-to-end LetNet5 implementation
+    description: Simple end-to-end LetNet5 TFlite implementation
         - For the purpose of EverybodyTensorFlow tutorial
             -
         - training with Mnist data set from Yann's website.
@@ -15,7 +15,7 @@
 
 
     author: Jaewook Kang
-    date  : 2018 Feb.
+    date  : 2018 Mar.
 
 '''
 # Anybody know why we should include "__future__" code conventionally?
@@ -29,6 +29,8 @@ import sys
 import time
 from datetime import datetime
 
+from os import getcwd
+
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -37,7 +39,6 @@ sys.path.insert(0, getcwd()+'/tf_my_modules/cnn')
 from tfmodel_lenet5 import Lenet5
 from mnist_data_loader import DataFilename
 from mnist_data_loader import MnistLoader
-
 
 
 
@@ -74,6 +75,8 @@ class TrainConfig(object):
         now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
         root_logdir = 'tf_logs'
         self.logdir = "{}/run-{}/".format(root_logdir, now)
+
+
 
 
 # data size config
@@ -162,6 +165,9 @@ with lenet5_tf_graph.as_default():
     # Initialize the variables (i.e. assign their default value)
     init = tf.global_variables_initializer()
 
+    # For pb and ckpt saving
+    lenet5_model_builder.set_model_saver()
+
 # file writing for Tensorboard
 #file_writer = tf.summary.FileWriter(logdir=trainconfig_worker.logdir)
 #file_writer.add_graph(lenet5_tf_graph)
@@ -180,12 +186,19 @@ validation_error_rate   = np.zeros(shape=np.ceil(trainconfig_worker.training_epo
 test_error_rate         = np.zeros(shape=np.ceil(trainconfig_worker.training_epochs/trainconfig_worker.display_step).astype(np.int16),
                                    dtype=np.float32)
 
+
+
+
 with tf.Session(graph=lenet5_tf_graph) as sess:
 
     # Run the variable initializer
     sess.run(init)
     print("-------------------------------------------")
     rate_record_index = 0
+
+    # save graph structure in pb / pbtxt
+    lenet5_model_builder.save_tfgraph_pb(sess_graph_def=sess.graph_def)
+    print("-------------------------------------------")
 
     for epoch in range(trainconfig_worker.training_epochs):
         avg_cost = 0.
@@ -244,6 +257,10 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
             print("--------------------------------------------")
 
             rate_record_index += 1
+
+        if epoch % lenet5_model_builder.model_savepath_worker.ckpt_period == 0:
+            lenet5_model_builder.save_ckpt(sess=sess,epoch=epoch)
+
 
     print("Training finished!")
 
