@@ -76,7 +76,7 @@ class TrainConfig(object):
         root_logdir = 'tf_logs'
         self.logdir = "{}/run-{}/".format(root_logdir, now)
 
-
+        self.ckpt_period = -1
 
 
 # data size config
@@ -143,8 +143,8 @@ with lenet5_tf_graph.as_default():
 
     with tf.name_scope("cost_func"):
         lenet5_model_builder.get_tf_cost_fuction(train_labels_node = labels_node,
-                                            is_l2_loss=True,
-                                            epsilon=trainconfig_worker.fc_layer_l2loss_epsilon)
+                                                is_l2_loss=True,
+                                                epsilon=trainconfig_worker.fc_layer_l2loss_epsilon)
 
     with tf.name_scope('optimizer'):
         lenet5_model_builder.get_tf_optimizer(opt_type=trainconfig_worker.opt_type,
@@ -258,8 +258,12 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
 
             rate_record_index += 1
 
-        if epoch % lenet5_model_builder.model_savepath_worker.ckpt_period == 0:
-            lenet5_model_builder.save_ckpt(sess=sess,epoch=epoch)
+        if trainconfig_worker.ckpt_period > 0:
+            if epoch % ckpt_period == 0:
+                lenet5_model_builder.save_ckpt(sess=sess,epoch=epoch)
+
+    if trainconfig_worker.ckpt_period < 0:
+        lenet5_model_builder.save_ckpt(sess=sess)
 
 
     print("Training finished!")
