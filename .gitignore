@@ -109,3 +109,5 @@ data/mnist/*
 tf_basic/pb_and_ckpt/*
 
 *jwkangmacproui*
+
+*.pyc

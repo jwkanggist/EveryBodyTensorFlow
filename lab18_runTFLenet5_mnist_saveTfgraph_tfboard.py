@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 #! /usr/bin/env python
 '''
-    filename: lab18_runTFliteLenet5_mnist.py
+    filename: lab18_runTFLenet5_mnist_saveTfgraph_tfboard.py
 
     description: Simple end-to-end LetNet5 TFlite implementation
         - For the purpose of EverybodyTensorFlow tutorial
@@ -95,21 +95,21 @@ trainconfig_worker  = TrainConfig()
 
 
 # Download the data
-train_data_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.trainingimages_filename)
-train_labels_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.traininglabels_filename)
+train_data_filepathname     = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.trainingimages_filename)
+train_labels_filepathname   = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.traininglabels_filename)
 
-test_data_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testimages_filename)
-test_labels_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testlabels_filename)
+test_data_filepathname      = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testimages_filename)
+test_labels_filepathname    = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testlabels_filename)
 
 # extract data from gzip files into numpy arrays
-train_data = mnist_data_loader.extract_data(filename=train_data_filepathname,
-                                            num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
-train_labels = mnist_data_loader.extract_label(filename=train_labels_filepathname,
+train_data      = mnist_data_loader.extract_data(filename=train_data_filepathname,
+                                                num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
+train_labels    = mnist_data_loader.extract_label(filename=train_labels_filepathname,
                                                 num_images=TRAININGSET_SIZE + VALIDATIONSET_SIZE)
 
-test_data = mnist_data_loader.extract_data(filename=test_data_filepathname,
-                                            num_images=TESTSET_SIZE)
-test_labels = mnist_data_loader.extract_label(filename=test_labels_filepathname,
+test_data       = mnist_data_loader.extract_data(filename=test_data_filepathname,
+                                                num_images=TESTSET_SIZE)
+test_labels     = mnist_data_loader.extract_label(filename=test_labels_filepathname,
                                                 num_images=TESTSET_SIZE)
 
 # prepare validation by spliting training set
@@ -131,9 +131,11 @@ with lenet5_tf_graph.as_default():
     data_node = tf.placeholder(dtype=trainconfig_worker.tf_data_type,
                                shape=[None, mnist_data_loader.IMAGE_SIZE,
                                             mnist_data_loader.IMAGE_SIZE,
-                                            mnist_data_loader.NUM_CHANNELS])
+                                            mnist_data_loader.NUM_CHANNELS],
+                               name='input')
     labels_node = tf.placeholder(dtype=tf.int64,
-                                 shape=[None, ])
+                                 shape=[None, ],
+                                 name='output')
 
     dropout_keeprate_node = tf.placeholder(dtype=trainconfig_worker.tf_data_type)
 
@@ -168,13 +170,14 @@ with lenet5_tf_graph.as_default():
     # For pb and ckpt saving
     lenet5_model_builder.set_model_saver()
 
-# file writing for Tensorboard
-#file_writer = tf.summary.FileWriter(logdir=trainconfig_worker.logdir)
-#file_writer.add_graph(lenet5_tf_graph)
+# Tensorboard Config =======================================
+file_writer = tf.summary.FileWriter(logdir=trainconfig_worker.logdir)
+file_writer.add_graph(lenet5_tf_graph)
 
 # Summary for Tensorboard visualization
-#tb_summary_accuracy = tf.summary.scalar('accuracy', tf_pred_accuracy)
-#tb_summary_cost     = tf.summary.scalar('loss', lenet5_model_builder.tf_cost)
+tb_summary_training_accuracy    = tf.summary.scalar('train_accuracy', tf_pred_accuracy)
+tb_summary_validation_accuracy  = tf.summary.scalar('validation_accuracy', tf_pred_accuracy)
+tb_summary_test_accuracy        = tf.summary.scalar('test_accuracy', tf_pred_accuracy)
 
 
 # network model training ==============================
@@ -185,7 +188,6 @@ validation_error_rate   = np.zeros(shape=np.ceil(trainconfig_worker.training_epo
                                    dtype=np.float32)
 test_error_rate         = np.zeros(shape=np.ceil(trainconfig_worker.training_epochs/trainconfig_worker.display_step).astype(np.int16),
                                    dtype=np.float32)
-
 
 
 
@@ -243,11 +245,23 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
                                                                                               labels_node: test_labels,
                                                                                               dropout_keeprate_node: 1.0})) * 100.0
 
-            # tb_summary_cost_result, tb_summary_accuracy_result  = sess.run([tb_summary_cost,tb_summary_accuracy],
-            #                                                                feed_dict={data_node: train_data,
-            #                                                                           labels_node: train_labels,
-            #                                                                           dropout_keeprate_node:1.0})
-            #         file_writer.add_summary(summary_str,step)
+            # tensorboard recording
+            tb_summary_train_accuracy_result  = tb_summary_training_accuracy.eval(feed_dict={data_node: train_data,
+                                                                                      labels_node: train_labels,
+                                                                                      dropout_keeprate_node:1.0})
+
+            tb_summary_validation_accuracy_result  = tb_summary_validation_accuracy.eval(feed_dict={data_node: validation_data,
+                                                                                      labels_node: validation_labels,
+                                                                                      dropout_keeprate_node:1.0})
+
+            tb_summary_test_accuracy_result  = tb_summary_test_accuracy.eval(feed_dict={data_node: test_data,
+                                                                                      labels_node: test_labels,
+                                                                                      dropout_keeprate_node:1.0})
+
+            file_writer.add_summary(tb_summary_train_accuracy_result,epoch)
+            file_writer.add_summary(tb_summary_validation_accuracy_result,epoch)
+            file_writer.add_summary(tb_summary_test_accuracy_result,epoch)
+
             print('At epoch = %d, elapsed_time = %.1f ms' % (epoch, elapsed_time))
 
             print("Training set avg cost (avg over minibatches)=%.2f" % avg_cost)
@@ -259,7 +273,7 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
             rate_record_index += 1
 
         if trainconfig_worker.ckpt_period > 0:
-            if epoch % ckpt_period == 0:
+            if epoch % trainconfig_worker.ckpt_period == 0:
                 lenet5_model_builder.save_ckpt(sess=sess,epoch=epoch)
 
     if trainconfig_worker.ckpt_period < 0:
@@ -268,7 +282,7 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
 
     print("Training finished!")
 
-#file_writer.close()
+file_writer.close()
 
 # Training result visualization ===============================================
 
