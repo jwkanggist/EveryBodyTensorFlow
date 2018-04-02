@@ -26,7 +26,7 @@ output_tflite_path   = getcwd()+'/pb_and_ckpt/lenet5/tflite_out/'
 # The output node name is from Tensorboard
 output_node_names   = 'model_out/Softmax'
 input_node_names    =  'input'
-input_shape_str = '>,28,28,1'
+input_shape_str = '1,28,28,1'
 sys.path.insert(0,  input_frozen_pb_path)
 sys.path.insert(0,  getcwd()+'/tf_lite/')
 

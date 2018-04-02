@@ -22,10 +22,12 @@
     date  : 2018 Apr
 '''
 
-from os import path
 from tensorflow.python.tools import freeze_graph
-
+from os import chdir
+from os import getcwd
+from os import path
 from subprocess import check_output
+
 
 
 class TfliteConfig(object):
@@ -41,11 +43,13 @@ class TfliteConfig(object):
         self.input_array            = str()
         self.output_array           = str()
 
+        self.tf_src_dir_path = str()
 
 
     def set_config(self, input_dir_path, output_dir_path,
                         input_pb_file, output_tflite_file,
-                        inference_type, input_shape, input_array, output_array):
+                        inference_type, input_shape, input_array, output_array,
+                        tf_src_dir_path):
 
         self.input_dir_path     = input_dir_path        # the pathname the input frozen graph stored
         self.output_dir_path    = output_dir_path       # the pathname the output tflite file will be saved
@@ -57,10 +61,13 @@ class TfliteConfig(object):
         self.input_array        = input_array           # getting from Tensorboard
         self.output_array       = output_array          # getting from Tensorboard
 
+        self.tf_src_dir_path    = tf_src_dir_path
+
         if not path.exists(self.output_dir_path):
             check_output('mkdir ' + output_dir_path, shell=True)
 
         self.show_config()
+
 
     def reset(self):
         self.input_dir_path         = str()
@@ -74,6 +81,8 @@ class TfliteConfig(object):
         self.output_array       = str()
         
     def show_config(self):
+        print ('# ------------------------------------------------ ')
+
         print ('# [TfliteConfig] input_dir_path: %s' % self.input_dir_path)
         print ('# [TfliteConfig] output_dir_path: %s' % self.output_dir_path)
 
@@ -135,6 +144,8 @@ class FreezeGraphConfig (object):
 
 
     def show_config(self):
+        print ('# ------------------------------------------------ ')
+
         print ('# [FreezeGraphConfig] input_dir_path: %s' % self.input_dir_path)
         print ('# [FreezeGraphConfig] output_dir_path: %s' % self.output_dir_path)
 
@@ -180,7 +191,8 @@ class TFliteConvertor(object):
                                     inference_type,
                                     input_shape,
                                     input_array,
-                                    output_array):
+                                    output_array,
+                                    tf_src_dir_path):
 
 
 
@@ -191,7 +203,8 @@ class TFliteConvertor(object):
                                              inference_type=inference_type,
                                              input_shape=input_shape,
                                              input_array=input_array,
-                                             output_array=output_array)
+                                             output_array=output_array,
+                                             tf_src_dir_path=tf_src_dir_path)
 
 
 
@@ -224,11 +237,7 @@ class TFliteConvertor(object):
         output_tflite_path   = self.tflite_config_worker.output_dir_path + self.tflite_config_worker.output_tflite_file
 
 
-        toco_build_cmd1 = 'bazel build --config=opt //tensorflow/contrib/lite/toco:toco -- ' \
-                          ''
-
-
-        # toco_cmd1 = 'toco '
+        # toco arguments
         toco_cmd2 = ' --input_file=' + input_frozen_pb_path
         toco_cmd3 = ' --output_file='+ output_tflite_path
         toco_cmd4 = ' inference_type=' + self.tflite_config_worker.inference_type
@@ -236,17 +245,18 @@ class TFliteConvertor(object):
         toco_cmd6 = ' input_array='    + self.tflite_config_worker.input_array
         toco_cmd7 = ' output_array='   + self.tflite_config_worker.output_array
 
+        # dir path change
+        curr_path = getcwd()
+        chdir(self.tflite_config_worker.tf_src_dir_path)
 
-        # bazel_cmd = 'bazel run --config=opt //tensorflow/contrib/lite/toco:toco -- '
-        # cmd = bazel_cmd + toco_cmd1 \
-        #                 + toco_cmd2 \
-        #                 + toco_cmd3 \
-        #                 + toco_cmd4 \
-        #                 + toco_cmd5 \
-        #                 + toco_cmd6 \
-        #                 + toco_cmd7
+        # bazel clean
+        bazel_clean_cmd = 'bazel clean --expunge'
+        shell_out = check_output(bazel_clean_cmd,shell=True)
+        print ('$ ' + bazel_clean_cmd)
+        print ('> ' + shell_out)
 
-
+        # main toco command
+        toco_build_cmd1 = 'bazel run --config=opt //tensorflow/contrib/lite/toco:toco -- '
         cmd = toco_build_cmd1 + toco_cmd2 \
                         + toco_cmd3 \
                         + toco_cmd4 \
@@ -254,11 +264,27 @@ class TFliteConvertor(object):
                         + toco_cmd6 \
                         + toco_cmd7
 
-        print ('$ '+ toco_build_cmd1)
-        shell_out = check_output(toco_build_cmd1, shell=True)
 
+
+        print ('Dir path move to %s' % self.tflite_config_worker.tf_src_dir_path)
         print ('$ '+ cmd)
         shell_out = check_output(cmd, shell=True)
 
-        print ('> '+ shell_out)
 
+        # toco_cmd1 = 'toco '
+        # cmd = toco_cmd1 + toco_cmd2 \
+        #                 + toco_cmd3 \
+        #                 + toco_cmd4 \
+        #                 + toco_cmd5 \
+        #                 + toco_cmd6 \l
+        #                 + toco_cmd7
+
+        #
+        # print ('$ '+ toco_build_cmd1)
+        # shell_out = check_output(toco_build_cmd1, shell=True)
+
+
+
+        print ('> '+ shell_out)
+        print ('Dir path return to %s' % curr_path)
+        chdir(curr_path)
