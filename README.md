@@ -19,11 +19,12 @@ This repository provides tutorial python scripts used in the EverybodyTensorlfow
 /
 |
 |-- /data
+|__ /model
 |-- /pb_and_ckpt
 |-- /python_basic
 |-- /tf_basic
 |-- /tf_my_modules
-|-- /tf_lite
+|-- /tflite
 ```
 
 ### Data
@@ -40,9 +41,12 @@ for educational purpose.
 Example scripts to testify basic functions of Tensorflow.               
 
 ### TF MY Modules
-Including fundamental tensorflow module for Tensorflow model developments.
+Including fundamental Tensorflow modules for model developments.
 - [CNN modules](https://github.com/jwkanggist/EveryBodyTensorFlow/tree/master/tf_my_modules/cnn)
 - ~~RBM modules~~
+
+### Tensorflow Lite Modules
+Including codes with respect to Tensorflow Lite
 
 ## Releted Lecture Materials (All Korean)
 - [Tensorflow fundamental](https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU): [KIT](https://www.kumoh.ac.kr/main.do) 2017 Sep
@@ -61,20 +65,13 @@ Including fundamental tensorflow module for Tensorflow model developments.
 
 ## Authors information 
 - Jaewook Kang Ph.D.
-- Personal website: [link] (https://sites.google.com/site/jwkang10/)
-- Facebook : [link] (https://www.facebook.com/jwkkang)
-- Linkedin : [link] (https://www.linkedin.com/in/jaewook-kang-3a4217b9/)
+- [Personal website](https://sites.google.com/site/jwkang10/)
+- [Facebook](https://www.facebook.com/jwkkang)
+- [Linkedin](https://www.linkedin.com/in/jaewook-kang-3a4217b9/)
 
 
 ## Code References
-Aymeric's repo
-- https://github.com/aymericdamien/TensorFlow-Examples
-
-Prof. Sung Kim’s repo
-- https://github.com/hunkim/DeepLearningZeroToAll   
-
-Sujay's repo
-- https://github.com/sujaybabruwad/
-
-Google Tensorflow repo
-- https://github.com/tensorflow
+- [Aymeric's repo](https://github.com/aymericdamien/TensorFlow-Examples)
+- [Prof. Sung Kim’s repo](https://github.com/hunkim/DeepLearningZeroToAll)   
+- [Sujay's repo](https://github.com/sujaybabruwad/)
+- [Google Tensorflow repo](https://github.com/tensorflow)
