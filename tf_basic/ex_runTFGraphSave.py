@@ -34,14 +34,14 @@ init_op = tf.global_variables_initializer()
 # savor operation to save
 saver = tf.train.Saver()  # including all variable
 #saver = tf.train.Saver([v1, v2, v3])  # specifying variable to checkpoint
-graph =  tf.get_default_graph()
+graph = tf.get_default_graph()
 
 # period of checkpoint
 ckpt_period = 5
 
-with tf.Session() as sess:
+with tf.Session(graph=graph) as sess:
     # 텍스트 파일 형식으로 저장
-    savedir = getcwd() + '/model/ex'
+    savedir = getcwd() + '/pb_and_ckpt/ex'
     filename_pbtxt = 'tf_graph_def.pbtxt'
     filename_pb = 'tf_graph_def.pb'
 
@@ -67,7 +67,7 @@ with tf.Session() as sess:
         if step % ckpt_period == 0:
             # STEP 2) 모델 훈련 결과값 (variable값) 를 checkpoint로 저장하기
             # step 별로 파일명 다르게 해서 Checkpoint 저장
-            save_path = saver.save(sess, getcwd() + "/model/ex/model_variable.ckpt", global_step=step)
+            save_path = saver.save(sess, getcwd() + "/pb_and_ckpt/ex/model_variable.ckpt", global_step=step)
             #save_path = saver.save(sess, getcwd() + "/model/ex/model_variable.ckpt")
 
             print("step - %s: Model saved in file: %s" % (step, save_path))
