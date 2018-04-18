@@ -45,9 +45,9 @@ Including fundamental tensorflow module for Tensorflow model developments.
 - ~~RBM modules~~
 
 ## Releted Lecture Materials (All Korean)
-- [Tensorflow fundamental](https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU): KIT 2017 Sep
-- [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/1Q1GXw_7rwZhxmMTCbJDLaQrkn0l-6k_M) : GIST 2018 Jan
-
+- [Tensorflow fundamental](https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU): [KIT](https://www.kumoh.ac.kr/main.do) 2017 Sep
+- [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/1Q1GXw_7rwZhxmMTCbJDLaQrkn0l-6k_M) : [GIST](https://www.gist.ac.kr/kr/) 2018 Jan
+- [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/114Kvgg8wg3r8IrclzGggixwkdYWMrykR): [DevMento](http://www.itonair.tv/) 2018 Apr
 
 ## Feedback 
 - Issues: report issues, bugs, and request new features
