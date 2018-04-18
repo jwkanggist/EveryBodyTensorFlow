@@ -122,54 +122,54 @@ biases = {
 def neural_net(x,batchnorm_istraining_io,batch_norm_epsilon,batch_norm_decay):
     # Input fully connected layer with 10 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-    layer_1 = tf.contrib.layers.batch_norm(inputs=layer_1,\
-                                           decay = batch_norm_decay,\
-                                           center=True,\
-                                           scale= True,\
-                                           epsilon= batch_norm_epsilon,\
-                                           is_training = batchnorm_istraining_io)
+    layer_1 = tf.layers.batch_normalization(inputs=layer_1, \
+                                            momentum = batch_norm_decay,\
+                                            center=True,\
+                                            scale= True,\
+                                            epsilon= batch_norm_epsilon,\
+                                            training = batchnorm_istraining_io)
     layer_1 = tf.nn.relu(layer_1)
 
 
     # Hidden fully connected layer with 7 neurons
     layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-    layer_2 = tf.contrib.layers.batch_norm(inputs=layer_2, \
-                                           decay=batch_norm_decay, \
-                                           center=True,\
-                                           scale= True,\
-                                           epsilon= batch_norm_epsilon,\
-                                           is_training = batchnorm_istraining_io)
+    layer_2 = tf.layers.batch_normalization(inputs=layer_2, \
+                                            momentum=batch_norm_decay, \
+                                            center=True,\
+                                            scale= True,\
+                                            epsilon= batch_norm_epsilon,\
+                                            training = batchnorm_istraining_io)
     layer_2 = tf.nn.relu(layer_2)
 
 
     # Hidden fully connected layer with 7 neurons
     layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
-    layer_3 = tf.contrib.layers.batch_norm(inputs=layer_3, \
-                                           decay=batch_norm_decay, \
-                                           center=True,\
-                                           scale= True,\
-                                           epsilon= batch_norm_epsilon,\
-                                           is_training = batchnorm_istraining_io)
+    layer_3 = tf.layers.batch_normalization(inputs=layer_3, \
+                                            momentum=batch_norm_decay, \
+                                            center=True,\
+                                            scale= True,\
+                                            epsilon= batch_norm_epsilon,\
+                                            training = batchnorm_istraining_io)
     layer_3 = tf.nn.relu(layer_3)
 
     # Hidden fully connected layer with 4 neurons
     layer_4 = tf.add(tf.matmul(layer_3, weights['h4']), biases['b4'])
-    layer_4 = tf.contrib.layers.batch_norm(inputs=layer_4, \
-                                           decay=batch_norm_decay, \
-                                           center=True,\
-                                           scale= True,\
-                                           epsilon= batch_norm_epsilon,\
-                                           is_training = batchnorm_istraining_io)
+    layer_4 = tf.layers.batch_normalization(inputs=layer_4, \
+                                            momentum=batch_norm_decay, \
+                                            center=True,\
+                                            scale= True,\
+                                            epsilon= batch_norm_epsilon,\
+                                            training = batchnorm_istraining_io)
     layer_4 = tf.nn.relu(layer_4)
 
     # Hidden fully connected layer with 4 neurons
     layer_5 = tf.add(tf.matmul(layer_4, weights['h5']), biases['b5'])
-    layer_5 = tf.contrib.layers.batch_norm(inputs=layer_5,\
-                                           decay=batch_norm_decay, \
-                                           center=True,\
-                                           scale= True,\
-                                           epsilon= batch_norm_epsilon,\
-                                           is_training = batchnorm_istraining_io)
+    layer_5 = tf.layers.batch_normalization(inputs=layer_5, \
+                                            momentum=batch_norm_decay, \
+                                            center=True,\
+                                            scale= True,\
+                                            epsilon= batch_norm_epsilon,\
+                                            training = batchnorm_istraining_io)
     layer_5 = tf.nn.relu(layer_5)
 
     # Output fully connected layer with a neuron for each class
@@ -293,5 +293,5 @@ plt.legend()
 plt.title('Train/Valid Err with batch norm.' )
 plt.xlabel('Iteration epoch')
 plt.ylabel('error Rate')
-
+plt.show()
 

@@ -69,9 +69,9 @@ batch_size = 500
 display_step = 1
 total_batch = int(training_size / batch_size)
 
-# dropout_rate = 1 --> no dropout
+# dropout_rate = 0 --> no dropout
 # dropout_rate = 1 --> no nodes to work
-dropoutrate_in_training = 0.8
+dropoutrate_in_training = 0.2
 
 # computational TF graph construction ================================
 # Network Parameters
@@ -280,12 +280,12 @@ with tf.Session() as sess:
             # for error rate evaluation, the dropout rate must be 1.0
             errRatebyTrainingSet[epoch] = 1.0 - accuracy.eval(feed_dict={X: batch_train_xs, \
                                                                          Y: batch_train_ys,\
-                                                                         dropoutrate_io: 1.0}, \
+                                                                         dropoutrate_io: 0.0}, \
                                                               session=sess)
 
             errRatebyValidationSet[epoch] = 1.0 - accuracy.eval(feed_dict={X: batch_valid_xs, \
                                                                            Y: batch_valid_ys,\
-                                                                           dropoutrate_io: 1.0},\
+                                                                           dropoutrate_io: 0.0},\
                                                                 session=sess)
 
             print("Training set Err rate: %s"   % errRatebyTrainingSet[epoch])
@@ -329,6 +329,6 @@ plt.legend()
 plt.title('Dropout = (%s), Train/Valid Err' % dropoutrate_in_training)
 plt.xlabel('Iteration epoch')
 plt.ylabel('error Rate')
-
+plt.show()
 
 

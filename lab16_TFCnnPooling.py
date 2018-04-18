@@ -27,8 +27,7 @@ dataset = np.array([china,flower],dtype=np.float32)
 # load images data set size
 batch_size,height, width, channels = dataset.shape
 
-# Creat a graph with with input X plus a convolutional layer
-# applying the 2 filter defined above
+
 X = tf.placeholder(tf.float32, shape=[None, height, width, channels],name='input')
 
 stride = 4
