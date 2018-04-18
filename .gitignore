@@ -101,10 +101,8 @@ ENV/
 .mypy_cache/
 
 # .gz
-.gz
+*.gz
 
 # pb /ckpt
-.pb
-.ckpt
-.index
-.meta
+./pb_and_ckpt/*
+*.local
