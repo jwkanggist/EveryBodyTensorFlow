@@ -22,7 +22,7 @@ import pandas as pd
 tf.reset_default_graph()
 
 filename = 'tf_graph_def.pb'
-model_dir = getcwd() + '/model/ex/'
+model_dir = getcwd() + '/pb_and_ckpt/ex/'
 model_filename = os.path.join(model_dir,filename)
 
 graph1 = tf.Graph()

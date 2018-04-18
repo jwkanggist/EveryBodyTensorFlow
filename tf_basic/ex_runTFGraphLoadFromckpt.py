@@ -24,7 +24,7 @@ import pandas as pd
 tf.reset_default_graph()
 
 filename = 'model_variable.ckpt-5'
-model_dir = getcwd() + '/model/ex/'
+model_dir = getcwd() + '/pb_and_ckpt/ex/'
 model_filename = os.path.join(model_dir,filename)
 
 

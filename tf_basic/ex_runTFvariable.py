@@ -26,17 +26,18 @@ with g.as_default():
   # 그 전에 먼저 'init' 연산을 그래프에 추가해야 합니다.
   init_op = tf.global_variables_initializer()
 
-  # 계산 그래프를 올리고 연산을 실행합니다.
-  with tf.Session() as sess:
 
-    # 변수를 사용하기 위해서 'init' 연산을 실행
-    sess.run(init_op)
+# 계산 그래프를 올리고 연산을 실행합니다.
+with tf.Session(graph=g) as sess:
 
-    #
-    # 'state'의 초기값 출력
-    print(sess.run(state))
-    # 'state'를 갱신하는 연산 실행 후 'state'를 출력
-    for _ in range(3):
-      sess.run(cnt_update)
-      print(sess.run(state))
+  # 변수를 사용하기 위해서 'init' 연산을 실행
+  sess.run(init_op)
+
+  #
+  # 'state'의 초기값 출력
+  print('init state = %s' % sess.run(state))
+  # 'state'를 갱신하는 연산 실행 후 'state'를 출력
+  for _ in range(3):
+    sess.run(cnt_update)
+    print('state = %s' % sess.run(state))
 

@@ -275,3 +275,4 @@ plt.xlabel('minibatch iter')
 plt.ylabel('Weight Gradient')
 
 
+plt.show()

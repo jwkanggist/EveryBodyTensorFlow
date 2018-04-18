@@ -28,8 +28,6 @@ from __future__ import print_function
 import sys
 import time
 from datetime import datetime
-
-import argparse
 from os import getcwd
 
 import numpy as np
@@ -37,9 +35,11 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 sys.path.insert(0, getcwd()+'/tf_my_modules/cnn')
+
 from tfmodel_lenet5 import Lenet5
 from mnist_data_loader import DataFilename
 from mnist_data_loader import MnistLoader
+
 
 
 

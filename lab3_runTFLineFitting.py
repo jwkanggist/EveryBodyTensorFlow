@@ -177,6 +177,8 @@ plt.title('MSE of prediction:')
 plt.xlabel('Iteration epoch')
 plt.ylabel('MSE')
 
+plt.show()
+
 hfig2 = plt.figure(2,figsize=(10,10))
 pred_y = pred_a * x_data[:,0] + pred_b
 plt.plot(x_validation_data[:,0],y_validation_data[:,0],label='noisy data',color='b',marker='*')
@@ -185,6 +187,8 @@ plt.legend()
 plt.title('A line fitting example:')
 plt.xlabel('X data')
 plt.ylabel('Y data')
+
+plt.show()
 # FIG_SAVE_DIR = getcwd() + '/figs/'
 # hfig1.savefig(FIG_SAVE_DIR + 'runExample_TFLogisticReg_aymeric_ErrRate.png')
 

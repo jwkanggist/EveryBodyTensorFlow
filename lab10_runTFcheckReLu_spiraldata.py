@@ -65,18 +65,18 @@ t_validation_data = t_data[training_size:-1,:]
 
 # configure training parameters =====================================
 # To see mitigation of vanishing gradient problem
-# learning_rate = 0.00001
-# training_epochs = 5
-# batch_size = 100
-# display_step = 1
-# total_batch = int(training_size / batch_size)
-
-## for convergence
-learning_rate = 5E-3
-training_epochs = 5000
-batch_size = 500
+learning_rate = 1E-5
+training_epochs = 5
+batch_size = 100
 display_step = 1
 total_batch = int(training_size / batch_size)
+
+## for convergence
+# learning_rate = 5E-3
+# training_epochs = 5000
+# batch_size = 500
+# display_step = 1
+# total_batch = int(training_size / batch_size)
 
 # computational TF graph construction ================================
 # Network Parameters
@@ -293,4 +293,4 @@ plt.legend()
 plt.title('Train/Valid Err')
 plt.xlabel('Iteration epoch')
 plt.ylabel('error Rate')
-
+plt.show()

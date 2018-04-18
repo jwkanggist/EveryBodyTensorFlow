@@ -25,7 +25,7 @@ import pandas as pd
 tf.reset_default_graph()
 
 # .ckpt로 부터 모델 weight 복구하기
-model_dir = getcwd() + '/model/ex/'
+model_dir = getcwd() + '/pb_and_ckpt/ex/'
 
 # construct naive three varible computational graph
 v1 = tf.Variable(0, name='variable1')
