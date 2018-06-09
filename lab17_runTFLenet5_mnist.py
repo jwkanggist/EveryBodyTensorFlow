@@ -138,24 +138,25 @@ with lenet5_tf_graph.as_default():
 
     lenet5_model_builder = Lenet5(dropout_keeprate_for_fc=dropout_keeprate_node,
                                  dtype=trainconfig_worker.tf_data_type)
-    lenet5_model_builder.get_tf_model(input_nodes=data_node)
+
+    lenet5_model_out = lenet5_model_builder.get_tf_model(input_nodes=data_node)
 
     with tf.name_scope("cost_func"):
-        lenet5_model_builder.get_tf_cost_fuction(train_labels_node = labels_node,
-                                            is_l2_loss=True,
-                                            epsilon=trainconfig_worker.fc_layer_l2loss_epsilon)
+        lenet5_cost_op = lenet5_model_builder.get_tf_cost_fuction(train_labels_node = labels_node,
+                                                                  is_l2_loss=True,
+                                                                  epsilon=trainconfig_worker.fc_layer_l2loss_epsilon)
 
     with tf.name_scope('optimizer'):
-        lenet5_model_builder.get_tf_optimizer(opt_type=trainconfig_worker.opt_type,
-                                         learning_rate=trainconfig_worker.learning_rate,
-                                         total_batch_size=TRAININGSET_SIZE,
-                                         minibatch_size=trainconfig_worker.minibatch_size,
-                                         is_exp_decay=trainconfig_worker.is_learning_rate_decay,
-                                         decay_rate=trainconfig_worker.learning_rate_decay_rate)
+        lenet5_opt_op = lenet5_model_builder.get_tf_optimizer(opt_type=trainconfig_worker.opt_type,
+                                                              learning_rate=trainconfig_worker.learning_rate,
+                                                              total_batch_size=TRAININGSET_SIZE,
+                                                              minibatch_size=trainconfig_worker.minibatch_size,
+                                                              is_exp_decay=trainconfig_worker.is_learning_rate_decay,
+                                                              decay_rate=trainconfig_worker.learning_rate_decay_rate)
 
 
     with tf.name_scope('model_out'):
-        model_pred = tf.nn.softmax(lenet5_model_builder.out_layer_out)
+        model_pred = tf.nn.softmax(lenet5_model_out)
 
     with tf.name_scope('eval_performance'):
         error             = tf.equal(tf.argmax(model_pred,1),labels_node)
@@ -170,7 +171,7 @@ with lenet5_tf_graph.as_default():
 
 # Summary for Tensorboard visualization
 #tb_summary_accuracy = tf.summary.scalar('accuracy', tf_pred_accuracy)
-#tb_summary_cost     = tf.summary.scalar('loss', lenet5_model_builder.tf_cost)
+#tb_summary_cost     = tf.summary.scalar('loss', lenet5_cost_op)
 
 
 # network model training ==============================
@@ -203,7 +204,7 @@ with tf.Session(graph=lenet5_tf_graph) as sess:
             minibatch_data  = train_data  [data_start_index:data_end_index, ...]
             minibatch_label = train_labels[data_start_index:data_end_index]
 
-            _, minibatch_cost = sess.run([lenet5_model_builder.tf_optimizer,lenet5_model_builder.tf_cost],
+            _, minibatch_cost = sess.run([lenet5_opt_op,lenet5_cost_op],
                                          feed_dict={data_node:      minibatch_data,
                                                     labels_node:     minibatch_label,
                                                     dropout_keeprate_node: trainconfig_worker.dropout_keeprate})
