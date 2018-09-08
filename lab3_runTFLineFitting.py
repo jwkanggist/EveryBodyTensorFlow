@@ -16,6 +16,7 @@ from IPython import display
 from matplotlib import cm
 from matplotlib import gridspec
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -72,23 +73,27 @@ display_step = 1
 # (a,b) : model parameters
 #         which will be learned from training data in the TF graph computation
 
-x = tf.placeholder(tf.float32, [xsize,None])
-y = tf.placeholder(tf.float32, [xsize,None])
+x = tf.placeholder(tf.float32, [xsize, None])
+y = tf.placeholder(tf.float32, [xsize, None])
 
 
-# Set model weights which is calculated in the TF graph
-a = tf.Variable(0.,name='a') # initialization by 1
-# b = tf.Variable(tf.zeros([xsize]))
-b = tf.Variable(0.,name='b')
+with tf.variable_scope(name_or_scope='model',
+                        values=[x,y]):
 
-print ('TF graph nodes are defined')
-##--------------------- Define function -----------------
-# define relationshitp btw instance data x and label data y
-# define optimizer used in the learning phase
-# define cost function for optimization
 
-# Construct model
-pred_y =  a * x + b
+    # Set model weights which is calculated in the TF graph
+    a = tf.Variable(0.,name='a') # initialization by 1
+    # b = tf.Variable(tf.zeros([xsize]))
+    b = tf.Variable(0.,name='b')
+
+    print ('TF graph nodes are defined')
+    ##--------------------- Define function -----------------
+    # define relationshitp btw instance data x and label data y
+    # define optimizer used in the learning phase
+    # define cost function for optimization
+
+    # Construct model
+    pred_y =  a * x + b
 
 # Minimize error using MSE function
 cost = tf.reduce_mean(tf.reduce_sum( tf.square(y - pred_y) , reduction_indices=1), name="mse")
@@ -116,9 +121,23 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 error_rate_training     = np.zeros(training_epochs)
 error_rate_validation   = np.zeros(training_epochs)
 
+# tensorboard summary
+now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+root_logdir = 'tf_logs/line_fitting'
+subdir = "{}/run-{}/".format(root_logdir, now)
+
+logdir = './pb_and_ckpt/' + subdir
+
+if not tf.gfile.Exists(logdir):
+    tf.gfile.MakeDirs(logdir)
+
+summary_writer = tf.summary.FileWriter(logdir=logdir)
+summary_writer.add_graph(graph=tf.get_default_graph())
+
 # Launch the graph (execution) ========================================
 # Initializing the variables
 init = tf.global_variables_initializer()
+summary_cost = tf.summary.scalar('cost',cost)
 
 ## -------------------- Learning iteration start --------------------
 with tf.Session() as sess:
@@ -145,6 +164,9 @@ with tf.Session() as sess:
             # Compute average loss
             avg_cost += local_batch_cost / total_batch
             # print ("At %d-th batch in %d-epoch, avg_cost = %f" % (i,epoch,avg_cost) )
+
+            summary_str = summary_cost.eval(feed_dict={x: batch_xs, y: batch_ys})
+            summary_writer.add_summary(summary_str, epoch)
 
         # Display logs per epoch step
         if (epoch+1) % display_step == 0:
