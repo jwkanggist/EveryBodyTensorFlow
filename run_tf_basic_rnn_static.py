@@ -32,6 +32,7 @@ def get_rnn_static_model(X,scope):
 
     with tf.name_scope(name=scope,values=[X]):
         X_seqs       = tf.unstack(tf.transpose(X,perm=[1,0,2]))
+
         basic_cell  = tf.nn.rnn_cell.BasicRNNCell(num_units=model_config['n_output'],
                                                   name='basic_rnn_cell')
 
