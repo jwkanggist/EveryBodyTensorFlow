@@ -39,8 +39,8 @@ def get_rnn_static_model(X,scope):
         output_seqs, states = tf.contrib.rnn.static_rnn(cell=basic_cell,
                                                         inputs=X_seqs,
                                                         dtype=model_config['dtype'])
-        Y = tf.transpose(tf.stack(output_seqs),perm=[1,0,2])
-    return Y
+        pred_y = tf.transpose(tf.stack(output_seqs),perm=[1,0,2])
+    return pred_y
 
 
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 
     scope = 'basic_rnn_model'
-    Y = get_rnn_static_model(X,scope)
+    pred_y = get_rnn_static_model(X,scope)
 
 
     # tensorboard summary
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
         sess.run(init)
 
-        Y_val = sess.run(fetches=[Y],feed_dict={X:X_batch})
+        Y_val = sess.run(fetches=[pred_y],feed_dict={X:X_batch})
 
 
     print('Y_val = %s' % Y_val)

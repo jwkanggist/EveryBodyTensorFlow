@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 #! /usr/bin/env python
 '''
-    filename: run_tf_basic_rnn_trainer.py
+    filename: run_tf_basic_rnn_sqe2vec_trainer.py
 
     This script is for
 
@@ -37,16 +37,18 @@ training_config = \
     }
 
 
-def get_rnn_static_model(X,scope):
-
+def get_rnn_dynamic_model(X,scope):
 
     with tf.name_scope(name=scope,values=[X]):
+        # X : 28 x 1
         basic_cell  = tf.nn.rnn_cell.BasicRNNCell(num_units=model_config['n_neurons'],
                                                   name='basic_rnn_cell')
-        Y, states = tf.nn.dynamic_rnn(cell=basic_cell,
+        # states : 150 x 1
+        outputs, states = tf.nn.dynamic_rnn(cell=basic_cell,
                                       inputs=X,
                                       dtype=model_config['dtype'])
 
+        # logits: 10 x 1
         logits = tf.layers.dense(states,model_config['n_output'])
 
     return logits
@@ -81,7 +83,7 @@ if __name__ == '__main__':
 
     # build model
     scope   = 'basic_rnn_model'
-    logits  = get_rnn_static_model(X,scope)
+    logits  = get_rnn_dynamic_model(X,scope)
 
     loss    = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=Y,
                                                                             logits=logits))
@@ -130,8 +132,8 @@ if __name__ == '__main__':
 
             acc_train = accuracy.eval(feed_dict={X:x_batch,
                                                  Y:y_batch})
-            acc_test  = accuracy.eval(feed_dict={X:x_batch,
-                                                 Y:y_batch})
+            acc_test  = accuracy.eval(feed_dict={X:x_test,
+                                                 Y:y_test})
 
             print(epoch,"Train accuracy:", acc_train, "Test accuracy:", acc_test)
 

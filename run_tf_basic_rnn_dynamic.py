@@ -28,16 +28,16 @@ model_config = \
 }
 
 
-def get_rnn_static_model(X,scope):
+def get_rnn_dynamic_model(X,scope):
 
 
     with tf.name_scope(name=scope,values=[X]):
         basic_cell  = tf.nn.rnn_cell.BasicRNNCell(num_units=model_config['n_output'],
                                                   name='basic_rnn_cell')
-        Y, states = tf.nn.dynamic_rnn(cell=basic_cell,
+        pred_y, states = tf.nn.dynamic_rnn(cell=basic_cell,
                                       inputs=X,
                                       dtype=model_config['dtype'])
-    return Y
+    return pred_y
 
 
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
 
     scope = 'basic_rnn_model'
-    Y = get_rnn_static_model(X,scope)
+    pred_y = get_rnn_dynamic_model(X,scope)
 
 
     # tensorboard summary
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
         sess.run(init)
 
-        Y_val = sess.run(fetches=[Y],feed_dict={X:X_batch})
+        Y_val = sess.run(fetches=[pred_y],feed_dict={X:X_batch})
 
 
     print('Y_val = %s' % Y_val)
