@@ -473,7 +473,7 @@ node {
             size: 2
           }
         }
-        tensor_content: "\005\000\000\000\002\000\000\000"
+        tensor_content: "\005\000\000\000\005\000\000\000"
       }
     }
   }
@@ -596,7 +596,7 @@ node {
           size: 5
         }
         dim {
-          size: 2
+          size: 5
         }
       }
     }
@@ -675,10 +675,10 @@ node {
         dtype: DT_INT32
         tensor_shape {
           dim {
-            size: 1
+            size: 2
           }
         }
-        int_val: 7
+        tensor_content: "\005\000\000\000\002\000\000\000"
       }
     }
   }
@@ -798,7 +798,10 @@ node {
     value {
       shape {
         dim {
-          size: 7
+          size: 5
+        }
+        dim {
+          size: 2
         }
       }
     }
@@ -880,7 +883,7 @@ node {
             size: 1
           }
         }
-        int_val: 5
+        int_val: 7
       }
     }
   }
@@ -1000,7 +1003,7 @@ node {
     value {
       shape {
         dim {
-          size: 5
+          size: 7
         }
       }
     }
@@ -1082,7 +1085,7 @@ node {
             size: 1
           }
         }
-        int_val: 2
+        int_val: 5
       }
     }
   }
@@ -1202,7 +1205,7 @@ node {
     value {
       shape {
         dim {
-          size: 2
+          size: 5
         }
       }
     }
@@ -1266,6 +1269,410 @@ node {
   }
 }
 node {
+  name: "random_normal_6/shape"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 5
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_6/mean"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+        }
+        float_val: 0.0
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_6/stddev"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+        }
+        float_val: 1.0
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_6/RandomStandardNormal"
+  op: "RandomStandardNormal"
+  input: "random_normal_6/shape"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "seed"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "seed2"
+    value {
+      i: 0
+    }
+  }
+}
+node {
+  name: "random_normal_6/mul"
+  op: "Mul"
+  input: "random_normal_6/RandomStandardNormal"
+  input: "random_normal_6/stddev"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "random_normal_6"
+  op: "Add"
+  input: "random_normal_6/mul"
+  input: "random_normal_6/mean"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "Variable_6"
+  op: "VariableV2"
+  attr {
+    key: "container"
+    value {
+      s: ""
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "shape"
+    value {
+      shape {
+        dim {
+          size: 5
+        }
+      }
+    }
+  }
+  attr {
+    key: "shared_name"
+    value {
+      s: ""
+    }
+  }
+}
+node {
+  name: "Variable_6/Assign"
+  op: "Assign"
+  input: "Variable_6"
+  input: "random_normal_6"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@Variable_6"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "Variable_6/read"
+  op: "Identity"
+  input: "Variable_6"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@Variable_6"
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_7/shape"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 2
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_7/mean"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+        }
+        float_val: 0.0
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_7/stddev"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+        }
+        float_val: 1.0
+      }
+    }
+  }
+}
+node {
+  name: "random_normal_7/RandomStandardNormal"
+  op: "RandomStandardNormal"
+  input: "random_normal_7/shape"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "seed"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "seed2"
+    value {
+      i: 0
+    }
+  }
+}
+node {
+  name: "random_normal_7/mul"
+  op: "Mul"
+  input: "random_normal_7/RandomStandardNormal"
+  input: "random_normal_7/stddev"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "random_normal_7"
+  op: "Add"
+  input: "random_normal_7/mul"
+  input: "random_normal_7/mean"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "Variable_7"
+  op: "VariableV2"
+  attr {
+    key: "container"
+    value {
+      s: ""
+    }
+  }
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "shape"
+    value {
+      shape {
+        dim {
+          size: 2
+        }
+      }
+    }
+  }
+  attr {
+    key: "shared_name"
+    value {
+      s: ""
+    }
+  }
+}
+node {
+  name: "Variable_7/Assign"
+  op: "Assign"
+  input: "Variable_7"
+  input: "random_normal_7"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@Variable_7"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "validate_shape"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "Variable_7/read"
+  op: "Identity"
+  input: "Variable_7"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@Variable_7"
+      }
+    }
+  }
+}
+node {
   name: "MatMul"
   op: "MatMul"
   input: "Placeholder"
@@ -1293,7 +1700,7 @@ node {
   name: "Add"
   op: "Add"
   input: "MatMul"
-  input: "Variable_3/read"
+  input: "Variable_4/read"
   attr {
     key: "T"
     value {
@@ -1340,7 +1747,7 @@ node {
   name: "Add_1"
   op: "Add"
   input: "MatMul_1"
-  input: "Variable_4/read"
+  input: "Variable_5/read"
   attr {
     key: "T"
     value {
@@ -1384,10 +1791,57 @@ node {
   }
 }
 node {
-  name: "add"
+  name: "Add_2"
   op: "Add"
   input: "MatMul_2"
-  input: "Variable_5/read"
+  input: "Variable_6/read"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "Relu_2"
+  op: "Relu"
+  input: "Add_2"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "MatMul_3"
+  op: "MatMul"
+  input: "Relu_2"
+  input: "Variable_3/read"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "transpose_a"
+    value {
+      b: false
+    }
+  }
+  attr {
+    key: "transpose_b"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "add_3"
+  op: "Add"
+  input: "MatMul_3"
+  input: "Variable_7/read"
   attr {
     key: "T"
     value {
@@ -1398,7 +1852,7 @@ node {
 node {
   name: "Softmax"
   op: "Softmax"
-  input: "add"
+  input: "add_3"
   attr {
     key: "T"
     value {
@@ -1441,7 +1895,7 @@ node {
 node {
   name: "softmax_cross_entropy_with_logits_sg/Shape"
   op: "Shape"
-  input: "add"
+  input: "add_3"
   attr {
     key: "T"
     value {
@@ -1479,7 +1933,7 @@ node {
 node {
   name: "softmax_cross_entropy_with_logits_sg/Shape_1"
   op: "Shape"
-  input: "add"
+  input: "add_3"
   attr {
     key: "T"
     value {
@@ -1665,7 +2119,7 @@ node {
 node {
   name: "softmax_cross_entropy_with_logits_sg/Reshape"
   op: "Reshape"
-  input: "add"
+  input: "add_3"
   input: "softmax_cross_entropy_with_logits_sg/concat"
   attr {
     key: "T"
@@ -2648,7 +3102,7 @@ node {
 node {
   name: "gradients/softmax_cross_entropy_with_logits_sg/Reshape_grad/Shape"
   op: "Shape"
-  input: "add"
+  input: "add_3"
   attr {
     key: "T"
     value {
@@ -2681,9 +3135,9 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/Shape"
+  name: "gradients/add_3_grad/Shape"
   op: "Shape"
-  input: "MatMul_2"
+  input: "MatMul_3"
   attr {
     key: "T"
     value {
@@ -2698,7 +3152,7 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/Shape_1"
+  name: "gradients/add_3_grad/Shape_1"
   op: "Const"
   attr {
     key: "dtype"
@@ -2722,10 +3176,10 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/BroadcastGradientArgs"
+  name: "gradients/add_3_grad/BroadcastGradientArgs"
   op: "BroadcastGradientArgs"
-  input: "gradients/add_grad/Shape"
-  input: "gradients/add_grad/Shape_1"
+  input: "gradients/add_3_grad/Shape"
+  input: "gradients/add_3_grad/Shape_1"
   attr {
     key: "T"
     value {
@@ -2734,10 +3188,10 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/Sum"
+  name: "gradients/add_3_grad/Sum"
   op: "Sum"
   input: "gradients/softmax_cross_entropy_with_logits_sg/Reshape_grad/Reshape"
-  input: "gradients/add_grad/BroadcastGradientArgs"
+  input: "gradients/add_3_grad/BroadcastGradientArgs"
   attr {
     key: "T"
     value {
@@ -2758,10 +3212,10 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/Reshape"
+  name: "gradients/add_3_grad/Reshape"
   op: "Reshape"
-  input: "gradients/add_grad/Sum"
-  input: "gradients/add_grad/Shape"
+  input: "gradients/add_3_grad/Sum"
+  input: "gradients/add_3_grad/Shape"
   attr {
     key: "T"
     value {
@@ -2776,10 +3230,10 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/Sum_1"
+  name: "gradients/add_3_grad/Sum_1"
   op: "Sum"
   input: "gradients/softmax_cross_entropy_with_logits_sg/Reshape_grad/Reshape"
-  input: "gradients/add_grad/BroadcastGradientArgs:1"
+  input: "gradients/add_3_grad/BroadcastGradientArgs:1"
   attr {
     key: "T"
     value {
@@ -2800,10 +3254,10 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/Reshape_1"
+  name: "gradients/add_3_grad/Reshape_1"
   op: "Reshape"
-  input: "gradients/add_grad/Sum_1"
-  input: "gradients/add_grad/Shape_1"
+  input: "gradients/add_3_grad/Sum_1"
+  input: "gradients/add_3_grad/Shape_1"
   attr {
     key: "T"
     value {
@@ -2818,16 +3272,16 @@ node {
   }
 }
 node {
-  name: "gradients/add_grad/tuple/group_deps"
+  name: "gradients/add_3_grad/tuple/group_deps"
   op: "NoOp"
-  input: "^gradients/add_grad/Reshape"
-  input: "^gradients/add_grad/Reshape_1"
+  input: "^gradients/add_3_grad/Reshape"
+  input: "^gradients/add_3_grad/Reshape_1"
 }
 node {
-  name: "gradients/add_grad/tuple/control_dependency"
+  name: "gradients/add_3_grad/tuple/control_dependency"
   op: "Identity"
-  input: "gradients/add_grad/Reshape"
-  input: "^gradients/add_grad/tuple/group_deps"
+  input: "gradients/add_3_grad/Reshape"
+  input: "^gradients/add_3_grad/tuple/group_deps"
   attr {
     key: "T"
     value {
@@ -2838,16 +3292,16 @@ node {
     key: "_class"
     value {
       list {
-        s: "loc:@gradients/add_grad/Reshape"
+        s: "loc:@gradients/add_3_grad/Reshape"
       }
     }
   }
 }
 node {
-  name: "gradients/add_grad/tuple/control_dependency_1"
+  name: "gradients/add_3_grad/tuple/control_dependency_1"
   op: "Identity"
-  input: "gradients/add_grad/Reshape_1"
-  input: "^gradients/add_grad/tuple/group_deps"
+  input: "gradients/add_3_grad/Reshape_1"
+  input: "^gradients/add_3_grad/tuple/group_deps"
   attr {
     key: "T"
     value {
@@ -2858,7 +3312,296 @@ node {
     key: "_class"
     value {
       list {
-        s: "loc:@gradients/add_grad/Reshape_1"
+        s: "loc:@gradients/add_3_grad/Reshape_1"
+      }
+    }
+  }
+}
+node {
+  name: "gradients/MatMul_3_grad/MatMul"
+  op: "MatMul"
+  input: "gradients/add_3_grad/tuple/control_dependency"
+  input: "Variable_3/read"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "transpose_a"
+    value {
+      b: false
+    }
+  }
+  attr {
+    key: "transpose_b"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "gradients/MatMul_3_grad/MatMul_1"
+  op: "MatMul"
+  input: "Relu_2"
+  input: "gradients/add_3_grad/tuple/control_dependency"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "transpose_a"
+    value {
+      b: true
+    }
+  }
+  attr {
+    key: "transpose_b"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "gradients/MatMul_3_grad/tuple/group_deps"
+  op: "NoOp"
+  input: "^gradients/MatMul_3_grad/MatMul"
+  input: "^gradients/MatMul_3_grad/MatMul_1"
+}
+node {
+  name: "gradients/MatMul_3_grad/tuple/control_dependency"
+  op: "Identity"
+  input: "gradients/MatMul_3_grad/MatMul"
+  input: "^gradients/MatMul_3_grad/tuple/group_deps"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@gradients/MatMul_3_grad/MatMul"
+      }
+    }
+  }
+}
+node {
+  name: "gradients/MatMul_3_grad/tuple/control_dependency_1"
+  op: "Identity"
+  input: "gradients/MatMul_3_grad/MatMul_1"
+  input: "^gradients/MatMul_3_grad/tuple/group_deps"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@gradients/MatMul_3_grad/MatMul_1"
+      }
+    }
+  }
+}
+node {
+  name: "gradients/Relu_2_grad/ReluGrad"
+  op: "ReluGrad"
+  input: "gradients/MatMul_3_grad/tuple/control_dependency"
+  input: "Relu_2"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/Shape"
+  op: "Shape"
+  input: "MatMul_2"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "out_type"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/Shape_1"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 5
+      }
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/BroadcastGradientArgs"
+  op: "BroadcastGradientArgs"
+  input: "gradients/Add_2_grad/Shape"
+  input: "gradients/Add_2_grad/Shape_1"
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/Sum"
+  op: "Sum"
+  input: "gradients/Relu_2_grad/ReluGrad"
+  input: "gradients/Add_2_grad/BroadcastGradientArgs"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "Tidx"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "keep_dims"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/Reshape"
+  op: "Reshape"
+  input: "gradients/Add_2_grad/Sum"
+  input: "gradients/Add_2_grad/Shape"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "Tshape"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/Sum_1"
+  op: "Sum"
+  input: "gradients/Relu_2_grad/ReluGrad"
+  input: "gradients/Add_2_grad/BroadcastGradientArgs:1"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "Tidx"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "keep_dims"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/Reshape_1"
+  op: "Reshape"
+  input: "gradients/Add_2_grad/Sum_1"
+  input: "gradients/Add_2_grad/Shape_1"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "Tshape"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/tuple/group_deps"
+  op: "NoOp"
+  input: "^gradients/Add_2_grad/Reshape"
+  input: "^gradients/Add_2_grad/Reshape_1"
+}
+node {
+  name: "gradients/Add_2_grad/tuple/control_dependency"
+  op: "Identity"
+  input: "gradients/Add_2_grad/Reshape"
+  input: "^gradients/Add_2_grad/tuple/group_deps"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@gradients/Add_2_grad/Reshape"
+      }
+    }
+  }
+}
+node {
+  name: "gradients/Add_2_grad/tuple/control_dependency_1"
+  op: "Identity"
+  input: "gradients/Add_2_grad/Reshape_1"
+  input: "^gradients/Add_2_grad/tuple/group_deps"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@gradients/Add_2_grad/Reshape_1"
       }
     }
   }
@@ -2866,7 +3609,7 @@ node {
 node {
   name: "gradients/MatMul_2_grad/MatMul"
   op: "MatMul"
-  input: "gradients/add_grad/tuple/control_dependency"
+  input: "gradients/Add_2_grad/tuple/control_dependency"
   input: "Variable_2/read"
   attr {
     key: "T"
@@ -2891,7 +3634,7 @@ node {
   name: "gradients/MatMul_2_grad/MatMul_1"
   op: "MatMul"
   input: "Relu_1"
-  input: "gradients/add_grad/tuple/control_dependency"
+  input: "gradients/Add_2_grad/tuple/control_dependency"
   attr {
     key: "T"
     value {
@@ -3642,7 +4385,7 @@ node {
   op: "ApplyGradientDescent"
   input: "Variable_3"
   input: "GradientDescent/learning_rate"
-  input: "gradients/Add_grad/tuple/control_dependency_1"
+  input: "gradients/MatMul_3_grad/tuple/control_dependency_1"
   attr {
     key: "T"
     value {
@@ -3669,7 +4412,7 @@ node {
   op: "ApplyGradientDescent"
   input: "Variable_4"
   input: "GradientDescent/learning_rate"
-  input: "gradients/Add_1_grad/tuple/control_dependency_1"
+  input: "gradients/Add_grad/tuple/control_dependency_1"
   attr {
     key: "T"
     value {
@@ -3696,7 +4439,7 @@ node {
   op: "ApplyGradientDescent"
   input: "Variable_5"
   input: "GradientDescent/learning_rate"
-  input: "gradients/add_grad/tuple/control_dependency_1"
+  input: "gradients/Add_1_grad/tuple/control_dependency_1"
   attr {
     key: "T"
     value {
@@ -3719,6 +4462,60 @@ node {
   }
 }
 node {
+  name: "GradientDescent/update_Variable_6/ApplyGradientDescent"
+  op: "ApplyGradientDescent"
+  input: "Variable_6"
+  input: "GradientDescent/learning_rate"
+  input: "gradients/Add_2_grad/tuple/control_dependency_1"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@Variable_6"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "GradientDescent/update_Variable_7/ApplyGradientDescent"
+  op: "ApplyGradientDescent"
+  input: "Variable_7"
+  input: "GradientDescent/learning_rate"
+  input: "gradients/add_3_grad/tuple/control_dependency_1"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "_class"
+    value {
+      list {
+        s: "loc:@Variable_7"
+      }
+    }
+  }
+  attr {
+    key: "use_locking"
+    value {
+      b: false
+    }
+  }
+}
+node {
   name: "GradientDescent"
   op: "NoOp"
   input: "^GradientDescent/update_Variable/ApplyGradientDescent"
@@ -3727,6 +4524,8 @@ node {
   input: "^GradientDescent/update_Variable_3/ApplyGradientDescent"
   input: "^GradientDescent/update_Variable_4/ApplyGradientDescent"
   input: "^GradientDescent/update_Variable_5/ApplyGradientDescent"
+  input: "^GradientDescent/update_Variable_6/ApplyGradientDescent"
+  input: "^GradientDescent/update_Variable_7/ApplyGradientDescent"
 }
 node {
   name: "ArgMax/dimension"
@@ -3904,6 +4703,8 @@ node {
   input: "^Variable_3/Assign"
   input: "^Variable_4/Assign"
   input: "^Variable_5/Assign"
+  input: "^Variable_6/Assign"
+  input: "^Variable_7/Assign"
 }
 versions {
   producer: 26

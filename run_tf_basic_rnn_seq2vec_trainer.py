@@ -3,8 +3,6 @@
 '''
     filename: run_tf_basic_rnn_sqe2vec_trainer.py
 
-    This script is for
-
     author: Jaewook Kang @ 2018 Sep
 '''
 
@@ -16,15 +14,16 @@ from __future__ import print_function
 from datetime import datetime
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-
+import matplotlib.pyplot as plt
+import numpy as np
 
 model_config = \
 {
     'batch_size': None,
     'n_input'   : 28,
+    'num_steps': 28,
     'n_neurons': 150,
     'n_output'  : 10,
-    'num_steps' : 28,
     'dtype'     : tf.float32
 }
 
@@ -32,7 +31,7 @@ model_config = \
 training_config = \
     {
         'learning_rate': 0.001,
-        'n_epochs':100,
+        'n_epochs':10,
         'batch_size':150
     }
 
@@ -61,8 +60,7 @@ if __name__ == '__main__':
     # dataset preparation
 
     mnist = input_data.read_data_sets("/tmp/data/")
-    x_test = mnist.test.images.reshape((-1, model_config['num_steps'], model_config['n_input']))
-    y_test = mnist.test.labels
+
 
     input_shape     = [model_config['batch_size'],
                        model_config['num_steps'],
@@ -121,6 +119,11 @@ if __name__ == '__main__':
         sess.run(init)
         for epoch in range(n_epochs):
 
+            x_test = mnist.test.images.reshape((-1,
+                                                model_config['num_steps'],
+                                                model_config['n_input']))
+            y_test = mnist.test.labels
+
             for iteration in range(mnist.train.num_examples // batch_size):
 
                 x_batch, y_batch = mnist.train.next_batch(batch_size)
@@ -137,6 +140,20 @@ if __name__ == '__main__':
 
             print(epoch,"Train accuracy:", acc_train, "Test accuracy:", acc_test)
 
+
+        x_true,y_true = mnist.train.next_batch(1)
+        x_true = x_true.reshape((-1,
+                                 model_config['num_steps'],
+                                  model_config['n_input']))
+
+        y_pred = sess.run([logits], feed_dict={X:x_true})
+        x_true = x_true.reshape((model_config['num_steps'],
+                                  model_config['n_input']))
+
+    plt.figure(1)
+    imgplot = plt.imshow(x_true)
+    plt.title('true = %s, pred = %s' %(y_true[0],np.argmax(y_pred)))
+    plt.show()
     summary_writer.close()
 
 
