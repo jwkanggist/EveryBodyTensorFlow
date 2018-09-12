@@ -77,7 +77,7 @@ if __name__ == '__main__':
                         shape= input_shape,
                         name = 'X1')
 
-    scope = 'basic_rnn_model'
+    scope = 'basic_rnn_matmul_model'
     Y0,Y1 = get_rnn_model(X0,X1,scope)
 
 

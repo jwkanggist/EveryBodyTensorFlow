@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 #! /usr/bin/env python
 '''
-    filename: run_tf_basic_rnn_seq2seq_trainer.py
+    filename: run_tf_deep_rnn_seq2seq_trainer.py
 
     This script is for predicting time series
 
@@ -22,6 +22,7 @@ model_config = \
 {
     'n_input'   : 1,
     'n_neurons' : 200,
+    'n_layers'  : 3,
     'n_output'  : 1,
     'num_steps' : 30,
     'dtype'     : tf.float32
@@ -31,27 +32,40 @@ model_config = \
 training_config = \
     {
         'learning_rate': 0.001,
-        'n_iteration':2000,
+        'n_iteration':2000
     }
 
 
-def get_rnn_dynamic_seq2seq_model(X,scope):
+def get_deep_rnn_seq2seq_model(X,scope):
 
 
     with tf.name_scope(name=scope,values=[X]):
-        cell  = tf.contrib.rnn.OutputProjectionWrapper(
-        tf.nn.rnn_cell.BasicRNNCell(num_units=model_config['n_neurons'],
-                                    activation= tf.nn.relu,
-                                    name='basic_rnn_cell'),
-                                    output_size = model_config['n_output'])
+
+        layers  = [tf.nn.rnn_cell.BasicRNNCell(num_units=model_config['n_neurons'],
+                                        activation= tf.nn.relu,
+                                        name='basic_rnn_cell')\
+                                        for layer in range(model_config['n_layers'])]
+        multi_layer_cell = tf.contrib.rnn.MultiRNNCell(layers)
+
+        rnn_outputs, states = tf.nn.dynamic_rnn(cell=multi_layer_cell,
+                                                inputs=X,
+                                                dtype=model_config['dtype'])
 
 
-        pred_y, states = tf.nn.dynamic_rnn(cell=cell,
-                                      inputs=X,
-                                      dtype=model_config['dtype'])
+        stacked_rnn_outputs = tf.reshape(rnn_outputs,
+                                         shape=[-1,
+                                                model_config['n_neurons']])
+
+        stacked_logits      = tf.layers.dense(stacked_rnn_outputs,
+                                              model_config['n_output'])
+        logits              = tf.reshape(stacked_logits,
+                                         shape=[-1,
+                                                model_config['num_steps'],
+                                                model_config['n_output']])
 
 
-    return pred_y, states
+
+    return logits
 
 
 
@@ -92,8 +106,8 @@ if __name__ == '__main__':
                         name  = 'Y')
 
     # build model
-    scope   = 'rnn_seq2seq_model'
-    pred_y,states  = get_rnn_dynamic_seq2seq_model(X,scope)
+    scope   = 'deep_rnn_seq2seq_model'
+    pred_y = get_deep_rnn_seq2seq_model(X,scope)
 
     loss    = tf.reduce_mean(tf.square(pred_y - Y))
 
@@ -104,7 +118,7 @@ if __name__ == '__main__':
 
     # tensorboard summary
     now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    root_logdir = 'tf_logs/rnn_basic_seq2seq_trainer'
+    root_logdir = 'tf_logs/rnn_deep_seq2seq_trainer'
     subdir = "{}/run-{}/".format(root_logdir, now)
 
     logdir = './pb_and_ckpt/' + subdir

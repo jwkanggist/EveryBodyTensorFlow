@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
 
 
-    scope = 'basic_rnn_model'
+    scope = 'basic_rnn_static_model'
     pred_y = get_rnn_static_model(X,scope)
 
 

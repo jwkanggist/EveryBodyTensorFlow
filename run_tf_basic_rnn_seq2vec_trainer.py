@@ -3,6 +3,8 @@
 '''
     filename: run_tf_basic_rnn_sqe2vec_trainer.py
 
+    This script is for predicting mnist images
+
     author: Jaewook Kang @ 2018 Sep
 '''
 
@@ -80,7 +82,7 @@ if __name__ == '__main__':
                       shape=[None])
 
     # build model
-    scope   = 'basic_rnn_model'
+    scope   = 'rnn_seq2vec_model'
     logits  = get_rnn_dynamic_model(X,scope)
 
     loss    = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=Y,
@@ -96,7 +98,7 @@ if __name__ == '__main__':
 
     # tensorboard summary
     now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    root_logdir = 'tf_logs/rnn_basic_trainer'
+    root_logdir = 'tf_logs/rnn_basic_seq2vec_trainer'
     subdir = "{}/run-{}/".format(root_logdir, now)
 
     logdir = './pb_and_ckpt/' + subdir
