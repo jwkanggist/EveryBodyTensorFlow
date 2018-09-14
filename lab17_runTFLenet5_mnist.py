@@ -74,8 +74,11 @@ class TrainConfig(object):
 
         # tensorboard config
         now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-        root_logdir = 'tf_logs'
-        self.logdir = "{}/run-{}/".format(root_logdir, now)
+        self.root_logdir = getcwd() + '/export/lenet5/'
+
+        self.ckptdir  = self.root_logdir + '/pb_and_ckpt/'
+        self.tflogdir = "{}/run-{}/".format(self.root_logdir+'/tf_logs', now)
+
 
 
 # data size config
@@ -137,9 +140,11 @@ with lenet5_tf_graph.as_default():
     dropout_keeprate_node = tf.placeholder(dtype=trainconfig_worker.tf_data_type)
 
     lenet5_model_builder = Lenet5(dropout_keeprate_for_fc=dropout_keeprate_node,
-                                 dtype=trainconfig_worker.tf_data_type)
+                                 dtype=trainconfig_worker.tf_data_type,
+                                  save_ckpt_path=trainconfig_worker.ckptdir)
 
     lenet5_model_out = lenet5_model_builder.get_tf_model(input_nodes=lenet5_model_in)
+
 
     with tf.name_scope("cost_func"):
         lenet5_cost_op = lenet5_model_builder.get_tf_cost_fuction(train_labels_node = lenet5_label,
@@ -165,13 +170,13 @@ with lenet5_tf_graph.as_default():
     # Initialize the variables (i.e. assign their default value)
     init = tf.global_variables_initializer()
 
-# file writing for Tensorboard
-#file_writer = tf.summary.FileWriter(logdir=trainconfig_worker.logdir)
-#file_writer.add_graph(lenet5_tf_graph)
+## file writing for Tensorboard
+file_writer = tf.summary.FileWriter(logdir=trainconfig_worker.tflogdir)
+file_writer.add_graph(lenet5_tf_graph)
 
-# Summary for Tensorboard visualization
-#tb_summary_accuracy = tf.summary.scalar('accuracy', tf_pred_accuracy)
-#tb_summary_cost     = tf.summary.scalar('loss', lenet5_cost_op)
+## Summary for Tensorboard visualization
+tb_summary_accuracy = tf.summary.scalar('accuracy', tf_pred_accuracy)
+tb_summary_cost     = tf.summary.scalar('loss', lenet5_cost_op)
 
 
 # network model training ==============================

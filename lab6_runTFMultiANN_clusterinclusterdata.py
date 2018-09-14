@@ -137,8 +137,8 @@ with tf.Session() as sess:
     sess.run(init)
 
     # save graph model
-    tf.train.write_graph(sess.graph_def,getcwd() + '/model/lab6','tfgraph_clusterincluster_ann_lab6.pbtxt')
-    tf.train.write_graph(sess.graph_def,getcwd() + '/model/lab6','tfgraph_clusterincluster_ann_lab6.pb',as_text =False)
+    tf.train.write_graph(sess.graph_def,getcwd() + '/export/lab6/pb','tfgraph_clusterincluster_ann_lab6.pbtxt')
+    tf.train.write_graph(sess.graph_def,getcwd() + '/export/lab6/pb','tfgraph_clusterincluster_ann_lab6.pb',as_text =False)
 
     for epoch in range(training_epochs):
         avg_cost = 0.
