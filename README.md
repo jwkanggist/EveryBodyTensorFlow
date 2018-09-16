@@ -1,6 +1,6 @@
 Readme for Everybody Tensorflow  
 ==================================
-- Final update: 2018 Mar 
+- Final update: 2018 Sep 
 - All right reserved @ Jaewook Kang 2017-2018
 
 
@@ -9,7 +9,7 @@ This repository provides tutorial python scripts used in the EverybodyTensorlfow
 
 
 ### Compiler/Interface Dependencies
-- Tensorflow >=1.5
+- Tensorflow >=1.9
 - Python2 <= 2.7.12
 - Python3 <= 3.6.0
 
@@ -19,7 +19,7 @@ This repository provides tutorial python scripts used in the EverybodyTensorlfow
 /
 |
 |-- /data
-|__ /model
+|__ /export
 |-- /pb_and_ckpt
 |-- /python_basic
 |-- /tf_basic
@@ -52,6 +52,8 @@ Including codes with respect to Tensorflow Lite
 - [Tensorflow fundamental](https://drive.google.com/open?id=0B44EO5r4F3SsazFXWnZnUUxLekU): [KIT](https://www.kumoh.ac.kr/main.do) 2017 Sep
 - [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/1Q1GXw_7rwZhxmMTCbJDLaQrkn0l-6k_M) : [GIST](https://www.gist.ac.kr/kr/) 2018 Jan
 - [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/114Kvgg8wg3r8IrclzGggixwkdYWMrykR): [DevMento](http://www.itonair.tv/) 2018 Apr
+- [Deep learning with Tensorflow](https://drive.google.com/drive/u/0/folders/1w6CRRCa2kXObwqhpPX3dUY0vaKVBRcep): [KIT](https://www.kumoh.ac.kr/main.do) 2018 Sep
+- [Deep learning and Tensorflow Best Practice](https://drive.google.com/drive/u/0/folders/1MNNvf5WsiyPnW8_iRG1-DmmOy2cCm4Po) [LG Electronics CTO] 2018 Sep
 
 ## Feedback 
 - Issues: report issues, bugs, and request new features
