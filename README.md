@@ -53,7 +53,7 @@ Including codes with respect to Tensorflow Lite
 - [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/1Q1GXw_7rwZhxmMTCbJDLaQrkn0l-6k_M) : [GIST](https://www.gist.ac.kr/kr/) 2018 Jan
 - [Deep learning with Tensorflow](https://drive.google.com/drive/u/1/folders/114Kvgg8wg3r8IrclzGggixwkdYWMrykR): [DevMento](http://www.itonair.tv/) 2018 Apr
 - [Deep learning with Tensorflow](https://drive.google.com/drive/u/0/folders/1w6CRRCa2kXObwqhpPX3dUY0vaKVBRcep): [KIT](https://www.kumoh.ac.kr/main.do) 2018 Sep
-- [Deep learning and Tensorflow Best Practice](https://drive.google.com/drive/u/0/folders/1MNNvf5WsiyPnW8_iRG1-DmmOy2cCm4Po) [LG Electronics CTO] 2018 Sep
+- [Deep learning and Tensorflow Best Practice](https://drive.google.com/drive/u/0/folders/1MNNvf5WsiyPnW8_iRG1-DmmOy2cCm4Po) [LG Electronics CTO](https://www.lg.com/global) 2018 Sep
 
 ## Feedback 
 - Issues: report issues, bugs, and request new features
