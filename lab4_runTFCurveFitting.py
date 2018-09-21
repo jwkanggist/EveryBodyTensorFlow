@@ -114,7 +114,7 @@ print ('Functions in TF graph are ready')
 
 ## Performance evaluation model ========================_y===========
 # y               : data output
-# pred_y: prediction output by model,  a x^3 + b x^2 + c x + d
+# pred_y: prediction output by model,
 correct_prediction = cost
 
 # Calculate error rate using data --------------
@@ -201,6 +201,8 @@ plt.legend()
 plt.title('A line fitting example:')
 plt.xlabel('X data')
 plt.ylabel('Y data')
+
+plt.show()
 # FIG_SAVE_DIR = getcwd() + '/figs/'
 # hfig1.savefig(FIG_SAVE_DIR + 'runExample_TFLogisticReg_aymeric_ErrRate.png')
 
