@@ -79,6 +79,9 @@ total_batch = int(training_size / batch_size)
 batch_norm_epsilon = 1E-5
 batch_norm_decay = 0.99
 
+# weight_init_fn = tf.contrib.layers.xavier_initializer()
+# weight_init_fn  = tf.contrib.layers.variance_scaling_initializer()
+weight_init_fn = tf.random_normal_initializer()
 
 # computational TF graph construction ================================
 # Network Parameters
@@ -100,21 +103,66 @@ Y           = tf.placeholder(tf.float32, [None, num_classes],   name = 'y')
 batchnorm_istraining_io = tf.placeholder(tf.bool,name='bn_phase')
 
 # Store layers weight & bias
+'''
+'h1': tf.Variable(tf.random_normal([num_input,  n_hidden_1])),
+'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
+'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3])),
+'h4': tf.Variable(tf.random_normal([n_hidden_3, n_hidden_4])),
+'h5': tf.Variable(tf.random_normal([n_hidden_4, n_hidden_5])),
+'out':tf.Variable(tf.random_normal([n_hidden_5, num_classes]))
+'''
 weights = {
-    'h1': tf.Variable(tf.random_normal([num_input,  n_hidden_1])),
-    'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
-    'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3])),
-    'h4': tf.Variable(tf.random_normal([n_hidden_3, n_hidden_4])),
-    'h5': tf.Variable(tf.random_normal([n_hidden_4, n_hidden_5])),
-    'out':tf.Variable(tf.random_normal([n_hidden_5, num_classes]))
+    'h1': tf.get_variable(name='h1_weight',
+                          shape=[num_input, n_hidden_1],
+                          initializer=weight_init_fn),
+
+    'h2': tf.get_variable(name='h2_weight',
+                           shape=[n_hidden_1,n_hidden_2],
+                           initializer=weight_init_fn),
+
+    'h3': tf.get_variable(name='h3_weight',
+                           shape=[n_hidden_2, n_hidden_3],
+                           initializer=weight_init_fn),
+
+    'h4': tf.get_variable(name='h4_weight',
+                           shape=[n_hidden_3, n_hidden_4],
+                           initializer=weight_init_fn),
+
+    'h5': tf.get_variable(name='h5_weight',
+                           shape=[n_hidden_4, n_hidden_5],
+                           initializer=weight_init_fn),
+
+    'out': tf.get_variable(name='out_weight',
+                           shape=[n_hidden_5, num_classes],
+                           initializer=weight_init_fn)
 }
+'''
+'b1': tf.Variable(tf.random_normal([n_hidden_1])),
+'b2': tf.Variable(tf.random_normal([n_hidden_2])),
+'b3': tf.Variable(tf.random_normal([n_hidden_3])),
+'b4': tf.Variable(tf.random_normal([n_hidden_4])),
+'b5': tf.Variable(tf.random_normal([n_hidden_5])),
+'out': tf.Variable(tf.random_normal([num_classes]))
+'''
 biases = {
-    'b1': tf.Variable(tf.random_normal([n_hidden_1])),
-    'b2': tf.Variable(tf.random_normal([n_hidden_2])),
-    'b3': tf.Variable(tf.random_normal([n_hidden_3])),
-    'b4': tf.Variable(tf.random_normal([n_hidden_4])),
-    'b5': tf.Variable(tf.random_normal([n_hidden_5])),
-    'out': tf.Variable(tf.random_normal([num_classes]))
+    'b1': tf.get_variable(name='b1_bias',
+                          shape=[n_hidden_1],
+                          initializer= weight_init_fn),
+    'b2': tf.get_variable(name='b2_bias',
+                          shape=[n_hidden_2],
+                          initializer=weight_init_fn),
+    'b3': tf.get_variable(name='b3_bias',
+                          shape=[n_hidden_3],
+                          initializer=weight_init_fn),
+    'b4': tf.get_variable(name='b4_bias',
+                          shape=[n_hidden_4],
+                          initializer=weight_init_fn),
+    'b5': tf.get_variable(name='b5_bias',
+                          shape=[n_hidden_5],
+                          initializer=weight_init_fn),
+    'out': tf.get_variable(name='out_bias',
+                          shape=[num_classes],
+                          initializer=weight_init_fn)
 }
 
 

@@ -117,7 +117,7 @@ def neural_net(x,dropoutrate_io):
     # Input fully connected layer with 10 neurons
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
     layer_1 = tf.nn.relu(layer_1)
-    layer_1 = tf.layers.dropout(inputs=layer_1,rate=dropoutrate_io)
+    # layer_1 = tf.nn.dropout(layer_1,keep_prob=dropoutrate_io)
 
 
     # Hidden fully connected layer with 7 neurons
