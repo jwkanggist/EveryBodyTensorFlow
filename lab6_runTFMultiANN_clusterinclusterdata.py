@@ -20,6 +20,7 @@ from pandas import DataFrame
 from sklearn import metrics
 import tensorflow as tf
 from tensorflow.contrib.learn.python.learn import learn_io
+from datetime import datetime
 
 # reading data set from csv file ==========================
 xsize  = 2
@@ -130,6 +131,17 @@ errRateValidation   = np.zeros(training_epochs)
 # Initialize the variables (i.e. assign their default value)
 init = tf.global_variables_initializer()
 
+now             = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+root_logdir     = 'export/lab6_cluster/tf_logs'
+logdir          = "{}/run-{}/".format(root_logdir,now)
+
+summary_writer  = tf.summary.FileWriter(logdir=logdir)
+summary_writer.add_graph(tf.get_default_graph())
+
+loss_summary        = tf.summary.scalar('loss',cost)
+accuracy_summary    = tf.summary.scalar('accuracy',accuracy)
+
+
 # Start training ===============================================
 with tf.Session() as sess:
 
@@ -161,6 +173,9 @@ with tf.Session() as sess:
             avg_cost += local_batch_cost / total_batch
             # print ("At %d-th batch in %d-epoch, avg_cost = %f" % (i,epoch,avg_cost) )
 
+            summary_str = accuracy_summary.eval(feed_dict={X: batch_xs, Y: batch_ts})
+            summary_writer.add_summary(summary_str, epoch*training_epochs + i)
+
             # Display logs per epoch step
         if display_step == 0:
             continue
@@ -183,6 +198,8 @@ with tf.Session() as sess:
         print("--------------------------------------------")
 
     print("Optimization Finished!")
+
+summary_writer.close()
 
 # Training result visualization ===============================================
 hfig2 = plt.figure(2,figsize=(10,10))

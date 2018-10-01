@@ -65,11 +65,16 @@ t_validation_data = t_data[training_size:-1,:]
 
 # configure training parameters =====================================
 # To see mitigation of vanishing gradient problem
-learning_rate = 1E-5
-training_epochs = 5
-batch_size = 100
+learning_rate = 5E-3
+training_epochs = 5000
+batch_size = 500
 display_step = 1
 total_batch = int(training_size / batch_size)
+
+
+weight_init_fn = tf.contrib.layers.xavier_initializer()
+# weight_init_fn  = tf.contrib.layers.variance_scaling_initializer()
+# weight_init_fn = tf.random_normal_initializer()
 
 ## for convergence
 # learning_rate = 5E-3
@@ -95,22 +100,68 @@ X = tf.placeholder(tf.float32, [None, num_input])
 Y = tf.placeholder(tf.float32, [None, num_classes])
 
 # Store layers weight & bias
+'''
+'h1': tf.Variable(tf.random_normal([num_input,  n_hidden_1])),
+'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
+'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3])),
+'h4': tf.Variable(tf.random_normal([n_hidden_3, n_hidden_4])),
+'h5': tf.Variable(tf.random_normal([n_hidden_4, n_hidden_5])),
+'out':tf.Variable(tf.random_normal([n_hidden_5, num_classes]))
+'''
 weights = {
-    'h1': tf.Variable(tf.random_normal([num_input,  n_hidden_1])),
-    'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2])),
-    'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3])),
-    'h4': tf.Variable(tf.random_normal([n_hidden_3, n_hidden_4])),
-    'h5': tf.Variable(tf.random_normal([n_hidden_4, n_hidden_5])),
-    'out':tf.Variable(tf.random_normal([n_hidden_5, num_classes]))
+    'h1': tf.get_variable(name='h1_weight',
+                          shape=[num_input, n_hidden_1],
+                          initializer=weight_init_fn),
+
+    'h2': tf.get_variable(name='h2_weight',
+                           shape=[n_hidden_1,n_hidden_2],
+                           initializer=weight_init_fn),
+
+    'h3': tf.get_variable(name='h3_weight',
+                           shape=[n_hidden_2, n_hidden_3],
+                           initializer=weight_init_fn),
+
+    'h4': tf.get_variable(name='h4_weight',
+                           shape=[n_hidden_3, n_hidden_4],
+                           initializer=weight_init_fn),
+
+    'h5': tf.get_variable(name='h5_weight',
+                           shape=[n_hidden_4, n_hidden_5],
+                           initializer=weight_init_fn),
+
+    'out': tf.get_variable(name='out_weight',
+                           shape=[n_hidden_5, num_classes],
+                           initializer=weight_init_fn)
 }
+'''
+'b1': tf.Variable(tf.random_normal([n_hidden_1])),
+'b2': tf.Variable(tf.random_normal([n_hidden_2])),
+'b3': tf.Variable(tf.random_normal([n_hidden_3])),
+'b4': tf.Variable(tf.random_normal([n_hidden_4])),
+'b5': tf.Variable(tf.random_normal([n_hidden_5])),
+'out': tf.Variable(tf.random_normal([num_classes]))
+'''
 biases = {
-    'b1': tf.Variable(tf.random_normal([n_hidden_1])),
-    'b2': tf.Variable(tf.random_normal([n_hidden_2])),
-    'b3': tf.Variable(tf.random_normal([n_hidden_3])),
-    'b4': tf.Variable(tf.random_normal([n_hidden_4])),
-    'b5': tf.Variable(tf.random_normal([n_hidden_5])),
-    'out': tf.Variable(tf.random_normal([num_classes]))
+    'b1': tf.get_variable(name='b1_bias',
+                          shape=[n_hidden_1],
+                          initializer= weight_init_fn),
+    'b2': tf.get_variable(name='b2_bias',
+                          shape=[n_hidden_2],
+                          initializer=weight_init_fn),
+    'b3': tf.get_variable(name='b3_bias',
+                          shape=[n_hidden_3],
+                          initializer=weight_init_fn),
+    'b4': tf.get_variable(name='b4_bias',
+                          shape=[n_hidden_4],
+                          initializer=weight_init_fn),
+    'b5': tf.get_variable(name='b5_bias',
+                          shape=[n_hidden_5],
+                          initializer=weight_init_fn),
+    'out': tf.get_variable(name='out_bias',
+                          shape=[num_classes],
+                          initializer=weight_init_fn)
 }
+
 
 # Create model
 def neural_net(x):
@@ -144,8 +195,9 @@ prediction = tf.nn.softmax(logits)
 
 # Define loss and optimizer
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
-#optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+# optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
+# optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate,momentum=0.8).minimize(cost)
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
 # Evaluate model
 correct_pred = tf.equal(tf.argmax(prediction, 1), tf.argmax(Y, 1))

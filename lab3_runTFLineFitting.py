@@ -82,9 +82,17 @@ with tf.variable_scope(name_or_scope='model',
 
 
     # Set model weights which is calculated in the TF graph
-    a = tf.Variable(0.,name='a') # initialization by 1
+    # a = tf.Variable(0.,name='a') # initialization by 1
     # b = tf.Variable(tf.zeros([xsize]))
-    b = tf.Variable(0.,name='b')
+    # b = tf.Variable(0.,name='b')
+
+    a = tf.get_variable(name='a',
+                        shape=[1],
+                        initializer=tf.random_normal_initializer)
+
+    b = tf.get_variable(name='b',
+                        shape=[1],
+                        initializer=tf.random_normal_initializer)
 
     print ('TF graph nodes are defined')
     ##--------------------- Define function -----------------
