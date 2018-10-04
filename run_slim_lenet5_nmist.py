@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 #! /usr/bin/env python
 '''
-    filename: run_tf_basic_lenet5_mnist.py
+    filename: run_tf_slim_lenet5_mnist.py
 
     description: simple end-to-end LetNet5 implementation
         - For the purpose of EverybodyTensorFlow tutorial
@@ -44,7 +44,7 @@ from mnist_data_loader import MnistLoader
 
 
 # configure training parameters =====================================
-TRAININGSET_SIZE     = 5000
+TRAININGSET_SIZE     = 1000
 VALIDATIONSET_SIZE   = 1000
 TESTSET_SIZE         = 1000
 

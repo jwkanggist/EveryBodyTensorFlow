@@ -4,3 +4,6 @@
 [submodule "tflite"]
 	path = tflite
 	url = https://github.com/jwkanggist/tensorflowlite
+[submodule "tf-code-pattern-lenet5"]
+	path = tf-code-pattern-lenet5
+	url = https://github.com/jwkanggist/tf-code-pattern-lenet5

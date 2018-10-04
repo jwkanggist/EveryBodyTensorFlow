@@ -167,7 +167,7 @@ with tf.Session() as sess:
             # Run optimization op (backprop) and cost op (to get loss value)
             # feedign training data
             _, local_batch_cost = sess.run([optimizer, cost], feed_dict={x: batch_xs,
-                                                          y: batch_ys})
+                                                                         y: batch_ys})
 
             # Compute average loss
             avg_cost += local_batch_cost / total_batch
