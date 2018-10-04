@@ -198,8 +198,8 @@ if __name__ == '__main__':
 
     # worker instance declaration
     datafilename_worker = DataFilename()
-    mnist_data_loader = MnistLoader()
-    trainconfig_worker = TrainConfig()
+    mnist_data_loader   = MnistLoader()
+    trainconfig_worker  = TrainConfig()
 
     # Download the data
     train_data_filepathname = mnist_data_loader.download_mnist_dataset(
@@ -207,7 +207,8 @@ if __name__ == '__main__':
     train_labels_filepathname = mnist_data_loader.download_mnist_dataset(
         filename=datafilename_worker.traininglabels_filename)
 
-    test_data_filepathname = mnist_data_loader.download_mnist_dataset(filename=datafilename_worker.testimages_filename)
+    test_data_filepathname  = mnist_data_loader.download_mnist_dataset(
+        filename=datafilename_worker.testimages_filename)
     test_labels_filepathname = mnist_data_loader.download_mnist_dataset(
         filename=datafilename_worker.testlabels_filename)
 

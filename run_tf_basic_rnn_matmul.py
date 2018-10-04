@@ -27,6 +27,7 @@ model_config = \
     'dtype'     : tf.float32
 }
 
+weigth_initializer = tf.contrib.layers.xavier_initializer()
 
 def get_rnn_model(X0,X1,scope):
 
@@ -42,14 +43,14 @@ def get_rnn_model(X0,X1,scope):
 
         Wx = tf.get_variable(name='weight_x',
                              shape=Wx_shape,
-                             initializer=tf.random_normal_initializer)
+                             initializer=weigth_initializer)
 
         Wh = tf.get_variable(name='weight_h',
                              shape=Wh_shape,
-                             initializer=tf.random_normal_initializer)
+                             initializer=weigth_initializer)
         b  = tf.get_variable(name='bias',
                              shape=bias_shape,
-                             initializer=tf.random_normal_initializer)
+                             initializer=weigth_initializer)
 
         Y0 = tf.tanh(tf.matmul(X0,Wx) + b)
         Y1 = tf.tanh(tf.matmul(X1,Wx) + tf.matmul(Y0,Wh) + b)

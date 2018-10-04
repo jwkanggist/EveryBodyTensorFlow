@@ -24,13 +24,14 @@ model_config = \
     'n_neurons' : 200,
     'n_output'  : 1,
     'num_steps' : 30,
-    'dtype'     : tf.float32
+    'dtype'     : tf.float32,
+    'shift_sample': 1
 }
 
 
 training_config = \
     {
-        'learning_rate': 0.005,
+        'learning_rate': 0.01,
         'n_iteration':2000,
     }
 
@@ -39,7 +40,7 @@ def get_lstm_dynamic_seq2seq_model(X,scope):
 
 
     with tf.name_scope(name=scope,values=[X]):
-        cell  = tf.nn.rnn_cell.BasicLSTMCell(num_units=model_config['n_neurons'],
+        cell  = tf.nn.rnn_cell.LSTMCell(num_units=model_config['n_neurons'],
                                     activation= tf.nn.relu,
                                     name='basic_lstm_cell')
 
@@ -132,7 +133,7 @@ if __name__ == '__main__':
     with tf.Session() as sess:
 
         sess.run(init)
-        shift_sample =2
+        shift_sample = model_config['shift_sample']
         for iteration in range(n_iteration):
 
             x_batch,y_batch,tx_train,ty_train =gen_seq_data(shift_sample=shift_sample,

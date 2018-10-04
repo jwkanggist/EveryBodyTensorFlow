@@ -46,11 +46,12 @@ def get_rnn_dynamic_model(X,scope):
                                                   name='basic_rnn_cell')
         # states : 150 x 1
         outputs, states = tf.nn.dynamic_rnn(cell=basic_cell,
-                                      inputs=X,
-                                      dtype=model_config['dtype'])
+                                            inputs=X,
+                                            dtype=model_config['dtype'])
 
         # logits: 10 x 1
         logits = tf.layers.dense(states,model_config['n_output'])
+        # logits  = tf.layers.dense(outputs[:,-1],model_config['n_output'])
 
     return logits
 

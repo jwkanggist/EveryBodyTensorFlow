@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 #! /usr/bin/env python
 '''
-    filename: run_tf_basic_rnn_seq2seq_faster_trainer.py
+    filename: run_tf_deep_lstm_seq2seq_faster_trainer.py
 
     This script is for predicting time series
 
@@ -17,35 +17,37 @@ from datetime import datetime
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
 model_config = \
 {
     'n_input'   : 1,
-    'n_neurons' : 400,
+    'n_neurons' : 200,
+    'n_layers'  : 1,
     'n_output'  : 1,
     'num_steps' : 30,
     'dtype'     : tf.float32,
     'shift_sample': 3
 }
 
-
 training_config = \
     {
-        'learning_rate': 0.001,
+        'learning_rate': 0.01,
         'n_iteration':2000,
     }
 
 
-def get_rnn_dynamic_seq2seq_model(X,scope):
+def get_lstm_dynamic_seq2seq_model(X,scope):
 
 
     with tf.name_scope(name=scope,values=[X]):
-        cell  = tf.nn.rnn_cell.BasicRNNCell(num_units=model_config['n_neurons'],
+
+        layer = [tf.nn.rnn_cell.LSTMCell(num_units=model_config['n_neurons'],
                                     activation= tf.nn.relu,
-                                    name='basic_rnn_cell')
+                                    name='basic_lstm_cell')\
+                                    for layer in range(model_config['n_layers'])]
 
+        multi_layer_cell = tf.contrib.rnn.MultiRNNCell(layer)
 
-        rnn_outputs, states = tf.nn.dynamic_rnn(cell=cell,
+        rnn_outputs, states = tf.nn.dynamic_rnn(cell=multi_layer_cell,
                                               inputs=X,
                                               dtype=model_config['dtype'])
 
@@ -101,8 +103,8 @@ if __name__ == '__main__':
                         name  = 'Y')
 
     # build model
-    scope   = 'rnn_seq2seq_faster_model'
-    pred_y  = get_rnn_dynamic_seq2seq_model(X,scope)
+    scope   = 'lstm_seq2seq_faster_model'
+    pred_y  = get_lstm_dynamic_seq2seq_model(X,scope)
 
     loss    = tf.reduce_mean(tf.square(pred_y - Y))
 
@@ -113,7 +115,7 @@ if __name__ == '__main__':
 
     # tensorboard summary
     now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    root_logdir = 'tf_logs/rnn_basic_seq2seq_faster_trainer'
+    root_logdir = 'tf_logs/lstm_basic_seq2seq_faster_trainer'
     subdir = "{}/run-{}/".format(root_logdir, now)
 
     logdir = './pb_and_ckpt/' + subdir
@@ -133,8 +135,7 @@ if __name__ == '__main__':
     with tf.Session() as sess:
 
         sess.run(init)
-        shift_sample = model_config['shift_sample']
-
+        shift_sample =2
         for iteration in range(n_iteration):
 
             x_batch,y_batch,tx_train,ty_train =gen_seq_data(shift_sample=shift_sample,
