@@ -65,6 +65,7 @@ plt.scatter(data.xdata1.values[int(data.xdata1.size/2)+2:-1],\
 plt.title('Cluster in Cluster data Example')
 plt.legend()
 
+plt.show()
 
 
 # configure training parameters =====================================
@@ -211,4 +212,4 @@ plt.title('Classification Error Rate of prediction:')
 plt.xlabel('Iteration epoch')
 plt.ylabel('error Rate')
 
-
+plt.show()
